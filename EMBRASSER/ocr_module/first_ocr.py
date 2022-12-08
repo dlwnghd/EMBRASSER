@@ -17,6 +17,7 @@ def plt_imshow_bgr(bgr_img):
 
 def preprocessing(img_path):
     
+    print("여기들어옴!")
     img = cv2.imread(img_path)
 
     height, width, channel = img.shape
@@ -27,8 +28,6 @@ def preprocessing(img_path):
         gray,
         ksize = (3, 3),   # 색을 뭉개는 범위??
         sigmaX = 0,   # x방향 sigma
-
-
     )
 
     img_blur_thresh = cv2.adaptiveThreshold(
@@ -131,44 +130,155 @@ def preprocessing(img_path):
 
     dst = cv2.warpPerspective(img, M, (max_width, max_height))
     
-    image_path = "{}_resized_pre.jpg".format(img_path)
+    image_path = "{}_pre.jpg".format(img_path)
 
+    # 프리프로세싱한 이미지 저장
     cv2.imwrite(image_path, dst)
+
+    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("image_path : ", image_path)
+    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     
     return image_path
 
+from operator import itemgetter
+import re
 
-# 웹 페이지 바운딩 이미지 올릴 자료
+class OCR:
+    # from operator import itemgetter
+    # import re
 
-import numpy as np
-import cv2
+    def __init__(self, local):
+        self.local = local
+        self.main_sentences = []
 
-def bounding_img(image_file, json_file):
-    file = image_file
-    img = cv2.imread(file, cv2.IMREAD_COLOR)
-    file = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    
-    with open(json_file, encoding = 'UTF8' ) as data_file:
-        local = json.load(data_file)
-
-    copy_img = img.copy()
-    for i in local['images'][0]["fields"]:
-        point=i['boundingPoly']['vertices']
-
-        x=int(point[0]['x'])
-        y=int(point[0]['y'])
-        h=int(point[2]["x"])
-        w=int(point[2]['y'])
-
-        cv2.rectangle(copy_img,pt1=(x, y), pt2=(h,w), color=(0, 255, 0), thickness=3)
+    # ===========================================
+    def main_sentences(self):
+        for i in range(len(self.local['images'][0]['fields'])):
+            self.main_sentences.append(self.local['images'][0]['fields'][i]['inferText'])
         
-    plt_imshow_bgr(copy_img)
+        return self.main_sentences
+    
+    # ===========================================
+    def max_pos(self, input_text):
+        pos = []
+        standard = {}     # '성명(한글)' x,y 좌표를 담을 변수 선언
+        standard_h = 0
+        for dictionary in self.local['images'][0]["fields"]:    
+            # 사각형의 x, y 값들을 비교하여 큰 값을 가지고있는 좌표값을 딕셔너리로 저장.
+            dictionary_sorted = sorted(dictionary['boundingPoly']['vertices'], key = itemgetter('y', 'x'))
+
+            dictionary_sorted_max = dictionary_sorted[-1]
+            pos.append(dictionary_sorted_max)    # 저장된걸 pos 리스트에 담음
+
+            if dictionary['inferText'] == input_text :            # 텍스트면 
+                standard = dictionary_sorted_max                            # 변수에 담기.
+                standard_h = abs(dictionary_sorted[0]['y'] - dictionary_sorted[2]['y'])
+
+        return standard, pos, standard_h
     
     
-    # 바운딩 이미지 저장
-#     image_path = "{}_bounding.jpg".format(image_file)
-#     cv2.imwrite(image_path, copy_img)
+    # ===========================================
+    def find_text(self, input_text, input_text2=None, h_up=0.7, h_down=0.5, w_left=5, w_right=3, direction=0):
+        i = 0
+        i_list = []
+        text = ''
+        one_max, all_max, h = self.max_pos(input_text)
+
+        if direction == 0:                    # 가로 방향
+            if input_text2:                     # 기준이 2개일때
+                two_max, _, _ = self.max_pos(input_text2)
+                for pos in all_max:
+                    if one_max['x'] < pos['x'] and two_max['x'] > pos['x'] and one_max['y'] - (h * h_up) < pos['y'] and one_max['y'] + (h * h_down) > pos['y']:
+                            i_list.append(i)
+                    i+=1
+            else:
+                for pos in all_max:
+                    if one_max['x'] < pos['x'] and one_max['y'] - (h * h_up) < pos['y'] and one_max['y'] + (h * h_down) > pos['y']:
+                        i_list.append(i)
+                    i+=1
+
+        elif direction == 1:                # 세로 방향
+            if input_text2:                     # 기준이 2개일때
+                two_max, _, _ = self.max_pos(input_text2)
+                for pos in all_max:
+                    if one_max['y'] < pos['y'] and two_max['y'] > pos['y']:     # 아직 안만듬.
+                            i_list.append(i)
+                    i+=1
+            else:
+                for pos in all_max:
+                    if one_max['y'] < pos['y'] and one_max['y'] + (h * h_down) > pos['y'] and one_max['x'] - (h * w_left) < pos['x'] and one_max['x'] + (h * w_right) > pos['x']:
+                        i_list.append(i)
+                    i+=1
+
+        for i in i_list:
+            text += self.local['images'][0]["fields"][i]['inferText']
+
+        return text.replace('\n','')
     
-#     return image_path
     
-bounding_img(image_file, json_file)
+    # ===========================================
+    # def result_application (self, sentences:list, sentences_dic:list):
+    #     result = {}
+    #     for sentence, sentence_dic in zip(sentences, sentences_dic):
+    #         if type(sentence) == tuple:
+    #             text = self.find_text(sentence[0], sentence[1])
+    #             result[sentence_dic] = text.strip()
+    #         else :
+    #             if sentence == '주소':
+    #                 text = self.find_text(sentence,h_up=1.5, h_down=1.5)
+    #             else :
+    #                 text = self.find_text(sentence)
+
+    #             result[sentence_dic] = text.strip() 
+    #     return result 
+
+
+    def result_application (self, sentences:dict):
+        result = {}
+        for k,v in sentences.items():
+            if type(k) == tuple:
+                text = self.find_text(k[0], k[1])
+                result[v] = text.strip()
+            else :
+                if k == '주소':
+                    text = self.find_text(k,h_up=1.5, h_down=1.5)
+                else :
+                    text = self.find_text(k)
+
+                result[v] = text.strip() 
+        return result  
+    
+    
+    # ===========================================
+    def result_IDcard(self, input_text):
+    
+    
+        name_li = []
+
+
+        while True:
+            name_dic = {}
+            text = self.find_text(input_text, h_down=3, direction=1)
+
+            if text : 
+                name_dic['name'] = re.findall('^[가-힣]+',text)[0]
+                name_dic['code'] = re.findall('([0-9]{6}-[0-9]{7})',text)[0]
+                input_text = text[-14:]
+                name_li.append(name_dic)
+            else:
+                break
+        return name_li
+
+
+    # ===========================================
+    def result_family(self, input_text):
+        family_li = []
+        while True:
+            text = self.find_text(input_text, h_down=3, direction=1)
+            if text : 
+                family_li.append(text)
+                input_text = text
+            else:
+                break
+        return family_li[:-1]

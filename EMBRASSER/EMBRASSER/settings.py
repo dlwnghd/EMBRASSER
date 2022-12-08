@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "Admin"
+    "EMBRASSER",
+    "Admin",
+    "OCR"
 ]
 
 MIDDLEWARE = [
@@ -126,8 +128,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 X_FRAME_OPTIONS = 'SAMEORIGIN' # 클릭재킹 - 보안쪽 속성... PYTHON 3.0 버전 이상부터만 설정하는 속성.
