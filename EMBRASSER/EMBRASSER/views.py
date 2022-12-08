@@ -28,27 +28,33 @@ def coocr_upload(request):
     imgname = ''
     resulttext = ''
 
+    # Upload할 파일을 Web에서 받아온다면
     if 'uploadfile' in request.FILES:
-        uploadfile = request.FILES.get('uploadfile','')
+        uploadfile = request.FILES.get('uploadfile','') #upload가 있으면 uploadfile 없으면 " " request
 
         if uploadfile != '':
             name_old = uploadfile.name
 
+            # 이미지 파일 저장 경로                         
             fs = FileSystemStorage(location = 'static/source')
+
+            # 파일을 저장할때 이미지명
             imgname = fs.save(f'src-{name_old}',uploadfile)
 
+            # 파일열기
             imgfile = Image.open(f'./static/source/{imgname}')
+            
+            # 결과 텍스트
             # resulttext = pytesseract.image_to_string(imgfile, lang='kor')
-
 
             # API 키 불러오기
             api_url = 'https://89w7f3qfa7.apigw.ntruss.com/custom/v1/19515/7dc8cb6af87386e43b045c2c4b47139b424763a831b47a497b51c005c2cb894c/general'
             secret_key = 'WEtTcUlIRmZGSENGU1RoSVBSR21vR3piY05IcGNMS1E='
 
             # 신청서
-            image_file = preprocessing(r'C:\DevRoot\dataset\project\app22.jpg')
-            json_file = r'C:\DevRoot\dataset\project\app22.json'
-
+            # image_file = preprocessing(r'C:\DevRoot\dataset\project\app22.jpg')
+            image_file = preprocessing(fs.base_location + '/image' + fs.url(imgname)) # 여기 경로를 수정
+            json_file = fs.base_location + '/json/' + imgname + '.json'  # ~.jpg.json 형식
 
             # 등본
             # image_file = r'C:\DevRoot\dataset\project\emdqhs.png'
@@ -58,6 +64,7 @@ def coocr_upload(request):
             # image_file = r'C:\DevRoot\dataset\project\family.png'
             # json_file = r'C:\DevRoot\dataset\project\family.json'
 
+            # 결과 json
             request_json = {
                 'images': [
                     {
