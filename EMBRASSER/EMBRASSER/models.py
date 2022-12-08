@@ -9,6 +9,7 @@ class Members(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
     addr = models.CharField(max_length=300, blank=True, null=True)
+    sex = models.CharField(max_length=10, blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     weight = models.IntegerField(blank=True, null=True)
     family = models.CharField(max_length=100, blank=True, null=True)
