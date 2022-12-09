@@ -20,47 +20,81 @@ def index(request):
 
 def joinmember(request):
     name = request.GET.get('name')
-    # age = request.GET.get('age')
-    # id_card = request.GET.get('id_card')
-    # number = request.GET.get('number')
-    # email = request.GET.get('email')
-    # address = request.GET.get('address')
-    # religion = request.GET.get('religion')
-    # education = request.GET.get('education')
-    # # sex = request.GET.get('sex')
-    # job = request.GET.get('job')
-    # salary = request.GET.get('salary')
-    # money = request.GET.get('money')
-    # debt = request.GET.get('debt')
-    # marriage = request.GET.get('marriage')
-    # alchol = request.GET.get('alchol')
-    # tabacco = request.GET.get('tabacco')
-    # cm = request.GET.get('cm')
-    # kg = request.GET.get('kg')
-    # sibling = request.GET.get('sibling')
+    age = request.GET.get('age')
+    p_code = request.GET.get('p_code')
+    phone = request.GET.get('phone')
+    email = request.GET.get('email')
+    address = request.GET.get('address')
+    religion = request.GET.get('religion')
+    scholar = request.GET.get('scholar')
+    sex = request.GET.get('sex')
+    job = request.GET.get('job')
+    salary = request.GET.get('salary')
+    property = request.GET.get('property')
+    debt = request.GET.get('debt')
+    re_marry = request.GET.get('re_marry')
+    drink = int(request.GET.get('drink'))
+    smoke = request.GET.get('smoke')
+    height = request.GET.get('height')
+    weight = request.GET.get('weight')
+    family = request.GET.get('family')
+
+    salary = int(salary.replace(",",""))
+    property = int(property.replace(",",""))
+    debt = int(debt.replace(",",""))
+    
+    if smoke == "x" or smoke == "X":
+        smoke = 0
+    else:
+        smoke = 1
+    
+    if re_marry == "미혼":
+        re_marry = 0
+    else:
+        re_marry = 1
+    
+    ddrink = ''
+    for d in drink:
+        if d.isdigit():
+            ddrink += d
+    drink = int(ddrink)
+
+    hheight = ''
+    for h in height:
+        if h.isdigit():
+            hheight += h
+    height = int(hheight)
+
+    wweight = ''
+    for w in weight:
+        if w.isdigit():
+            wweight += w
+    weight = int(wweight)
 
     try :
         print("name : ", name)
         Members.objects.create(
             name = name,
             # age = age,
-            # p_code = id_card,
-            # phone = number,
+            # p_code = p_code,
+            # phone = phone,
             # email = email,
-            # addr = address,
+            # addr = addr,
             # sex = sex,
-            # height = cm,
-            # weight = kg,
-            # family = sibling
-            # company = job,
+            # height = height,
+            # weight = weight,
+            # family = family
+            # job = job,
             # salary = salary,
-            # property = money,
+            # property = property,
             # debt = debt,
             # religion = religion,
-            # drink = alchol,
-            # smoke = tabacco,
-            # scholar = education,
-            # re_marry = marriage,
+            # drink = drink,
+            # smoke = smoke,
+            # scholar = scholar,
+            # re_marry = re_marry,
+
+            # grade 계산에서 넣어주기
         )
         print("읽을 수 있는 파일!")
 
@@ -88,18 +122,9 @@ def coocr_upload(request):
             # 이미지 파일 저장 경로                         
             fs = FileSystemStorage(location = 'static/source')
 
-            # json 파일 저장 경로                         
-            fs_json = FileSystemStorage(location = 'static/source/')
-
             # 이미지 파일을 저장할때 이미지명
             imgname = fs.save(f'image/src-{name_old}',uploadfile)
             img_name, file_type = os.path.splitext(imgname)
-
-            # 파일열기
-            # imgfile = Image.open(f'./static/source/{imgname}')
-            
-            # 결과 텍스트
-            # resulttext = pytesseract.image_to_string(imgfile, lang='kor')
             
             # API 키 불러오기
             api_url = 'https://89w7f3qfa7.apigw.ntruss.com/custom/v1/19515/7dc8cb6af87386e43b045c2c4b47139b424763a831b47a497b51c005c2cb894c/general'
@@ -117,15 +142,6 @@ def coocr_upload(request):
             print("777777777777777777777777777777")
             print("json_file : ", json_file)
             print("777777777777777777777777777777")
-            
-
-            # 등본
-            # image_file = r'C:\DevRoot\dataset\project\emdqhs.png'
-            # json_file = r'C:\DevRoot\dataset\project\emdqhs.json'
-
-            # 가족관계증명서
-            # image_file = r'C:\DevRoot\dataset\project\family.png'
-            # json_file = r'C:\DevRoot\dataset\project\family.json'
 
             # 결과 json
             request_json = {
@@ -158,40 +174,30 @@ def coocr_upload(request):
                 print("2222222222222222")
                 json.dump(local, outfile, indent=4, ensure_ascii=False)
             print("3333333333333333333")
-            
-            # sentences = [('성명(한글)','나이(만)'), '나이(만)', '주민등록번호','전화번호','E-mail','주소',
-            #         ('종교', '학력'), ('학력', '성별'), '성별', ('직업', '연봉'), '연봉', ('재산', '부채'),
-            #         '부채', ('결혼여부','음주횟수(월)'), ('음주횟수(월)','흡연여부(O/X)'), '흡연여부(O/X)',
-            #         ('신장(cm)','체중(kg)'), ('체중(kg)', '형제관계'), '형제관계']
-
-            # sentences_dic = ['name', 'age', 'id_card','number','Email','address',
-            # 'religion', 'Education', 'sex', 'job', 'salary', 'money',
-            #  'fan', 'marriage', 'alcohol', 'tobacco',
-            # 'cm', 'kg', 'sibling']
+        
 
             sentences = {('성명(한글)','나이(만)'):'name',
             '나이(만)':'age',
-            '주민등록번호':'id_card',
-            '전화번호':'number',
+            '주민등록번호':'p_code',
+            '전화번호':'phone',
             'E-mail':'email',
-            '주소':'address',
+            '주소':'addr',
             ('종교', '학력'):'religion',
-            ('학력', '성별'):'education',
+            ('학력', '성별'):'scholar',
             '성별':'sex',
             ('직업', '연봉'):'job',
             '연봉':'salary',
-            ('재산', '부채'):'money',
+            ('재산', '부채'):'property',
             '부채':'debt',
-            ('결혼여부','음주횟수(월)'):'marriage',
-            ('음주횟수(월)','흡연여부(O/X)'):'alcohol',
-            '흡연여부(O/X)':'tobacco',
-            ('신장(cm)','체중(kg)'):'cm',
-            ('체중(kg)', '형제관계'):'kg',
-            '형제관계':'sibling'}
+            ('결혼여부','음주횟수(월)'):'re_marry',
+            ('음주횟수(월)','흡연여부(O/X)'):'drink',
+            '흡연여부(O/X)':'smoke',
+            ('신장(cm)','체중(kg)'):'height',
+            ('체중(kg)', '형제관계'):'weight',
+            '형제관계':'family'}
 
             ocr = OCR(local)
             context['resulttext'] = ocr.result_application(sentences)
-            # ocr.result_application(sentences)
 
     # context에 데이터 담기
     context['imgname'] = imgname
