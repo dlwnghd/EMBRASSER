@@ -20,11 +20,11 @@ def index(request):
 
 def joinmember(request):
     name = request.GET.get('name')
-    age = request.GET.get('age')
+    age = int(request.GET.get('age'))
     p_code = request.GET.get('p_code')
     phone = request.GET.get('phone')
     email = request.GET.get('email')
-    address = request.GET.get('address')
+    addr = request.GET.get('addr')
     religion = request.GET.get('religion')
     scholar = request.GET.get('scholar')
     sex = request.GET.get('sex')
@@ -33,16 +33,16 @@ def joinmember(request):
     property = request.GET.get('property')
     debt = request.GET.get('debt')
     re_marry = request.GET.get('re_marry')
-    drink = int(request.GET.get('drink'))
+    drink = request.GET.get('drink')
     smoke = request.GET.get('smoke')
     height = request.GET.get('height')
     weight = request.GET.get('weight')
     family = request.GET.get('family')
 
-    salary = int(salary.replace(",",""))
-    property = int(property.replace(",",""))
-    debt = int(debt.replace(",",""))
-    
+    salary = int(salary.replace(",", "").replace(".", ''))
+    property = int(property.replace(",", "").replace(".", ''))
+    debt = int(debt.replace(",", "").replace(".", ''))
+
     if smoke == "x" or smoke == "X":
         smoke = 0
     else:
@@ -52,7 +52,8 @@ def joinmember(request):
         re_marry = 0
     else:
         re_marry = 1
-    
+
+
     ddrink = ''
     for d in drink:
         if d.isdigit():
@@ -71,36 +72,121 @@ def joinmember(request):
             wweight += w
     weight = int(wweight)
 
+# 등급 매기기
+
+    # 직업 
+    job_grade = {("판사", "의사", "교수", "검사", "박민준", "파일럿", "약사", "프로그래머"): 20,
+    ("교사", "은행원", "고위공무원", "대기업", "스타강사", "변호사") : 15,
+    ("경찰", "소방관", "디자이너", "행정공무원", "세무사") : 10,
+    ("일용직", "무직", "파트타이머", "학생", "계약직") : 5
+    }
+
+    for jobs, j_grade in job_grade.items():
+        if job in jobs:
+            grade_job = j_grade
+            break
+        else:
+            grade_job = 0
+    
+    # 나이
+    if 20 <= age <= 26:
+        grade_age = 8
+    elif 27 <= age <= 35:
+        grade_age = 10
+    elif 36 <= age <= 40:
+        grade_age = 7
+    elif 41 <= age <= 45:
+        grade_age = 5
+    elif 46 <= age:
+        grade_age = 3
+    else:
+        grade_age = 0
+
+    # 연봉
+    if salary <= 30000000:
+        grade_salary = 5
+    elif 30000000 < salary <= 45000000:
+        grade_salary = 10
+    elif 45000000 < salary <= 100000000:
+        grade_salary = 15
+    else:
+        grade_salary = 20
+    
+    # 부채
+    propotion = debt / property * 100
+    if propotion < 5:
+        grade_debt = 20
+    elif propotion < 20:
+        grade_debt = 15
+    elif propotion < 50:
+        grade_debt = 10
+    else :
+        grade_debt = 5
+
+    # 재산
+    if property < 100000000:
+        grade_property = 5
+    elif property < 500000000:
+        grade_property = 10
+    elif property < 3000000000:
+        grade_property = 15
+    elif property < 10000000000:
+        grade_property = 20
+    else:
+        grade_property = 30
+    
+
+
+    grade = grade_age + grade_salary + grade_debt + grade_property + grade_job
+    if grade >= 90:
+        grade = "S"
+    elif grade >= 80:
+        grade = "A"
+    elif grade >= 70:
+        grade = "B"
+    elif grade >= 60:
+        grade = "C"
+    else:
+        grade = "F"
+
+
+    flag = False
     try :
-        print("name : ", name)
-        Members.objects.create(
-            name = name,
-            # age = age,
-            # p_code = p_code,
-            # phone = phone,
-            # email = email,
-            # addr = addr,
-            # sex = sex,
-            # height = height,
-            # weight = weight,
-            # family = family
-            # job = job,
-            # salary = salary,
-            # property = property,
-            # debt = debt,
-            # religion = religion,
-            # drink = drink,
-            # smoke = smoke,
-            # scholar = scholar,
-            # re_marry = re_marry,
-
-            # grade 계산에서 넣어주기
-        )
-        print("읽을 수 있는 파일!")
-
+        
+        Members.objects.get(p_code=p_code)
+        msg = "이미 등록된 회원입니다"
     except Exception as e:
+        try:
+            Members.objects.create(
+                name = name,
+                age = age,
+                p_code = p_code,
+                phone = phone,
+                email = email,
+                addr = addr,
+                sex = sex,
+                height = height,
+                weight = weight,
+                family = family,
+                job = job,
+                salary = salary,
+                property = property,
+                debt = debt,
+                religion = religion,
+                drink = drink,
+                smoke = smoke,
+                scholar = scholar,
+                re_marry = re_marry,
+                grade = grade
+            )
+            print("읽을 수 있는 파일!")
+            flag = True
+            msg = "등록이 완료 되었습니다."
+        except Exception as ex:
+            print(ex)
+            print("읽을 수 없는 파일")
+            
         print(e)
-        print("읽을 수 없는 파일")
     # return joinmember(request, 'joinmember.html')
 
 
