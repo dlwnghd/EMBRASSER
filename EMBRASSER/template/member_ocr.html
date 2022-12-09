@@ -37,7 +37,28 @@
                     </td>
                     <td width="50%">
                         <pre>
-                            {{resulttext}}
+                            <form action="/joinmember">
+                                <input name="name" type="text" value="{{resulttext.name}}">
+                                <input name="age" type="text" value="{{resulttext.age}}">
+                                <input name="id_card" type="text" value="{{resulttext.id_card}}">
+                                <input name="number" type="text" value="{{resulttext.number}}">
+                                <input name="email" type="text" value="{{resulttext.email}}">
+                                <input name="address" type="text" value="{{resulttext.address}}">
+                                <input name="religion" type="text" value="{{resulttext.religion}}">
+                                <input name="education" type="text" value="{{resulttext.education}}">
+                                <input name="sex" type="text" value="{{resulttext.sex}}">
+                                <input name="job" type="text" value="{{resulttext.job}}">
+                                <input name="salary" type="text" value="{{resulttext.salary}}">
+                                <input name="money" type="text" value="{{resulttext.money}}">
+                                <input name="debt" type="text" value="{{resulttext.debt}}">
+                                <input name="marriage" type="text" value="{{resulttext.marriage}}">
+                                <input name="alchol" type="text" value="{{resulttext.alchol}}">
+                                <input name="tabacco" type="text" value="{{resulttext.tabacco}}">
+                                <input name="cm" type="text" value="{{resulttext.cm}}">
+                                <input name="kg" type="text" value="{{resulttext.kg}}">
+                                <input name="sibling" type="text" value="{{resulttext.sibling}}">
+                                <button type="submit">등록하기</button>
+                            </form>
                         </pre>
                     </td>
                 </tr>
