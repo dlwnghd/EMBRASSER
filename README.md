@@ -286,8 +286,8 @@
 
 | API Name                                                | API Name                                                | Parameter | Type     |
 | :-----------------------------------------------------  | :-----------------------------------------------------  | :-------- | :------- |
-| <img src="https://play-lh.googleusercontent.com/WcrqQ9atNdC7dp4vG4fWue0kRdMxiDSTKu9E1Zj7EmGcgdQ8j3u9_2Tt8vw-zPvKCkg=w240-h480-rw" width="48" height="48" alt="Tmap" style="background-color:white;"/>                                               | [T map API](https://tmapapi.sktelecom.com/index.html)   | `api_key` | `string` |
-
+| <img src=".\READEME\image\opencv.png" height="48" alt="OpenCV" style="background-color:white;"/>                                               | [OpenCV](https://opencv.org/)| `api_key` | `string` |
+| <img src=".\READEME\image\네이버_클로바.png" height="48" alt="Clova" style="background-color:white;"/>                                               | [Clova](https://clova.ai/ko)| `api_key` | `string` |
 -------
 
 ## Feedback
