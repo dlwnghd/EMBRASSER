@@ -20,5 +20,7 @@ from . import views
 urlpatterns = [
     # path("admin/", admin.site.urls),
     path('', views.index),
+    path('coocr_upload', views.coocr_upload),
+    path('joinmember', views.joinmember)
     # path('Admin/', include('Admin.urls')),
 ]
