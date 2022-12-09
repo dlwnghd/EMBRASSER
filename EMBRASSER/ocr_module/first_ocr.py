@@ -17,101 +17,77 @@ def plt_imshow_bgr(bgr_img):
 
 def preprocessing(img_path):
     
-    print("여기들어옴!")
+    
+    # 이미지 평평하게 만들기
     img = cv2.imread(img_path)
 
-    height, width, channel = img.shape
-
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    th, src_after = cv2.threshold(gray, 
+            0,  # thresh 값을 0으로 둠(이는 Otsu 에 의해 결정될 것임)
+            255,
+            cv2.THRESH_BINARY | cv2.THRESH_OTSU  # 비트연산자가 들어와있다는것은 값이 상수라는 뜻
+            
+            )
 
-    img_blurred = cv2.GaussianBlur(
-        gray,
-        ksize = (3, 3),   # 색을 뭉개는 범위??
-        sigmaX = 0,   # x방향 sigma
-    )
-
-    img_blur_thresh = cv2.adaptiveThreshold(
-        img_blurred, 
-        maxValue=255.0, 
-        adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
-        thresholdType=cv2.THRESH_BINARY, 
-        blockSize=19, 
-        C=9
-    )
-
+    
     contours, _ = cv2.findContours(
-        img_blur_thresh, 
+        src_after, 
         mode=cv2.RETR_LIST, 
         method=cv2.CHAIN_APPROX_SIMPLE
     )
 
 
-    temp_result = np.zeros((height, width, channel), dtype=np.uint8)
+    app = []
+    
+    app_area = []
+    for pts in contours:
+        
+        if cv2.contourArea(pts)  < 400000 : continue
+            
+        approx = cv2.approxPolyDP(    # (K, 1, 2) 형태가 나온다~ return 값이~
+        pts,                              # curve
+        cv2.arcLength(pts, True) * 0.02,  # epsilon
+        True,                             # closed
+        )
+        
+        app.append(approx)
+        
 
-    # ★★★★★★★★★
-    contours_dict = []   # <- 여기다가 contours 들의 정보를 다 저장하겠습니다.
+    for i in range(len(app)):
+        app_area.append(cv2.contourArea(app[i]))
 
+    max_area = app[np.argmax(app_area)]
 
-    for contour in contours:
-        x, y, w, h = cv2.boundingRect(contour)
+    cv2.polylines(
+                img,        # 영상 위에 바로 그림.
+                [max_area],
+                True,            # isClosed = True
+                (0, 0, 255),
+                thickness = 5# 색상
+            )
 
+    seq = np.squeeze(max_area)
+    
+    pts = np.lexsort((seq[:,1], seq[:, 0])) 
+    pts1 = seq[pts]
+    
+    if pts1[0, 1] > pts1[1, 1]:
+        pts1[[0, 1]] = pts1[[1, 0]]
 
-        # 위 boundindRect 도 그려도 보구..
-        cv2.rectangle(temp_result, pt1=(x, y), pt2=(x+w, y+h), color=(255, 255, 255), thickness=2)
+    if pts1[2, 1] < pts1[3, 1]:
+        pts1[[2, 3]] = pts1[[3, 2]]
+    
 
-        # 데이터를 만들고 insert to dict
-        contours_dict.append({
-            'contour': contour,
-            'x': x,
-            'y': y,
-            'w': w,
-            'h': h,
-            'cx': x + (w / 2),  # center X
-            'cy': y + (h / 2)   # center Y
-        })
+    top_left = pts1[0 , :]
+    top_right = pts1[3 , :]
 
-
-
-    MIN_AREA = 400000 # 최소 넓이
-    MIN_WIDTH, MIN_HEIGHT = 2, 8  # 최소 너비, 높이
-    MIN_RATIO, MAX_RATIO = 0.25, 1.0  # 너비-높이 비율의 최대/최소
-
-
-    # ★★★★★★★★★★
-    possible_contours = []  # 위 조건에 맞는 것들을 걸러낸 것들을 담아보겠습니다
-
-    cnt = 0
-    for d in contours_dict:  # 위에서 저장했었던 contours_dict 를 순환하면서
-
-        area = d['w'] * d['h']   # 넓이 계산
-        ratio = d['w'] / d['h']  # 너비-높이 비율 계산
-
-
-        # 조건에 맞는 것들만 골라서 possible_contours 에 담는다.
-        if area > MIN_AREA \
-        and d['w'] > MIN_WIDTH and d['h'] > MIN_HEIGHT \
-        and MIN_RATIO < ratio < MAX_RATIO:
-            d['idx'] = cnt     # 조건에 맞는 각 contour 에 idx 값을 매겨놓기
-                               # 나중에 조건에 맞는 윤곽선들의 idx 만 따로 빼놓음
-
-            cnt += 1
-            possible_contours.append(d)
-
-
-    x = possible_contours[0]['x']
-    y = possible_contours[0]['y']
-    w = possible_contours[0]['w']
-    h = possible_contours[0]['h']
-
-    top_left = (x, y)
-    top_right = (x+w, y)
-
-    bottom_left = (x, y+h)
-    bottom_right = (x+w, y+h)
+    bottom_left = pts1[1 , :]
+    bottom_right = pts1[2 , :]
 
 
     pts1 = np.float32([top_left, top_right, 
-                      bottom_right, bottom_left])
+                    bottom_right, bottom_left])
 
     w1 = abs(bottom_right[0] - bottom_left[0])
     w2 = abs(top_right[0] - top_left[0])
@@ -122,24 +98,49 @@ def preprocessing(img_path):
     max_height = max([h1, h2])
 
     pts2 = np.float32([[0, 0], 
-                      [max_width-1, 0], 
-                      [max_width-1, max_height-1], 
-                      [0, max_height-1]])
+                [max_width-1, 0], 
+                [max_width-1, max_height-1], 
+                [0, max_height-1]])
 
     M = cv2.getPerspectiveTransform(pts1, pts2)
 
     dst = cv2.warpPerspective(img, M, (max_width, max_height))
     
+    
+    
+    
+    # warpPerspective 한 후 전처리 하기
+    
+    gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
+    
+    img_blurred = cv2.GaussianBlur(
+        gray,
+        ksize = (3, 3),   # 색을 뭉개는 범위??
+        sigmaX = 0,   # x방향 sigma
+
+    )
+
+    img_blur_thresh = cv2.adaptiveThreshold(
+        img_blurred, 
+        maxValue=255.0, 
+        adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+        thresholdType=cv2.THRESH_BINARY, 
+        blockSize=19, 
+        C=9
+    )
+    
+    
+    # =====================================================================
+    
     image_path = "{}_pre.jpg".format(img_path)
 
-    # 프리프로세싱한 이미지 저장
-    cv2.imwrite(image_path, dst)
-
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    print("image_path : ", image_path)
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    cv2.imwrite(image_path, img_blur_thresh)
+    
+    plt_imshow_bgr(img_blur_thresh)
     
     return image_path
+
+
 
 from operator import itemgetter
 import re
@@ -185,6 +186,8 @@ class OCR:
         text = ''
         one_max, all_max, h = self.max_pos(input_text)
 
+        print("one_max : ", one_max)
+
         if direction == 0:                    # 가로 방향
             if input_text2:                     # 기준이 2개일때
                 two_max, _, _ = self.max_pos(input_text2)
@@ -212,7 +215,10 @@ class OCR:
                     i+=1
 
         for i in i_list:
-            text += self.local['images'][0]["fields"][i]['inferText']
+            if input_text == "주소":
+                text += self.local['images'][0]["fields"][i]['inferText'] + " "
+            else:
+                text += self.local['images'][0]["fields"][i]['inferText']
 
         return text.replace('\n','')
     
@@ -243,6 +249,7 @@ class OCR:
             else :
                 if k == '주소':
                     text = self.find_text(k,h_up=1.5, h_down=1.5)
+
                 else :
                     text = self.find_text(k)
 
