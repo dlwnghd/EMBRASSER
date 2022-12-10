@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path('coocr_upload', views.coocr_upload),
-    path('join_member', views.joinmember),
+    path('joinmember', views.joinmember)
 ]
