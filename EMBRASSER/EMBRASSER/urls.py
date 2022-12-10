@@ -18,10 +18,9 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
+    path('', views.index),
     path("admin/", admin.site.urls),
     path('member/', include('Member.urls')),
-    path('', views.index),
     # OCR 업로드
-    path('coocr_upload', views.coocr_upload),
-    path('join_customer', views.join_customer),
+    path('ocr/', include('OCR.urls')),
 ]
