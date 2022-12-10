@@ -15,10 +15,13 @@ import uuid
 import time
 import json
 
+# 메인페이지 이동
 def index(request):
     return render(request, 'index.html')
 
-def joinmember(request):
+
+# 회원 등록하기
+def join_customer(request):
     name = request.GET.get('name')
     age = int(request.GET.get('age'))
     p_code = request.GET.get('p_code')
@@ -189,8 +192,7 @@ def joinmember(request):
         print(e)
     # return joinmember(request, 'joinmember.html')
 
-
-
+# ocr 리턴값
 def coocr_upload(request):
 
     context = {}
