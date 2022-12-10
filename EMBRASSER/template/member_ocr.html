@@ -8,11 +8,11 @@
 
         <h1>
             {{menutitle}}
-            <a href="coocr_upload">OCR</a>
+            <a href="/ocr/coocr_upload">OCR</a>
         </h1>
 
         <form
-            action="/coocr_upload"
+            action="/ocr/coocr_upload"
             method="post"
             id="Coauthform"
             enctype="multipart/form-data">
@@ -33,7 +33,7 @@
                     </td>
                     <td width="50%">
                         <pre>
-                            <form action="/joinmember">
+                            <form action="/ocr/joinmember">
                                 <input name="name" type="text" value="{{resulttext.name}}">
                                 <input name="age" type="text" value="{{resulttext.age}}">
                                 <input name="p_code" type="text" value="{{resulttext.p_code}}">
