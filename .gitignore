@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
+
+
 ### react ###
 .DS_*
 *.log
@@ -37,6 +39,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+EMBRASSER/EMBRASSER/static/source/
 BYEOLZZI/BYEOLZZI/migrations/
 BYEOLZZI/migrations/
 migrations/
