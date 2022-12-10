@@ -4,7 +4,7 @@ from ocr_module.first_ocr import *
 import os
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 
 from config.State import State
@@ -198,6 +198,7 @@ def coocr_upload(request):
 
     imgname = ''
 
+
     # Upload할 파일을 Web에서 받아온다면
     if 'uploadfile' in request.FILES:
         uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
@@ -221,8 +222,14 @@ def coocr_upload(request):
             print("fs.base_location : ",fs.base_location + fs.url(imgname))
             print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             print("")
+            
             # 신청서
-            image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
+            try:
+
+                image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
+            except Exception as e:
+                print(e)
+                image_file = fs.base_location + fs.url(imgname)
             json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
 
             print("777777777777777777777777777777")
@@ -255,6 +262,20 @@ def coocr_upload(request):
 
             local = json.loads(response.text.encode('utf8'))
             
+            #==============================
+            # ocr2 = OCR(local)
+            
+            # list = ocr2.main_sentences
+            
+            # confirm_form = ""
+            # for li in list:
+            #     confirm_form += li.replace(" ", '')
+            
+            # if "회원가입신청서" not in confirm_form:
+            #     msg = "회원가입신청서 형식이 아닙니다."
+            #     return redirect("url", msg)
+
+            #==============================
             print("11111111111111" , local)
             with open(json_file, 'w', encoding='utf-8') as outfile:
                 print("2222222222222222")

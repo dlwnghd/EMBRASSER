@@ -33,9 +33,9 @@ class Members(models.Model):
 
 # 관리자 테이블
 class Admin(models.Model):
-    admin_idx = models.AutoField(primary_key=True)
-    admin_id = models.CharField(max_length=20, blank=True, null=True)
-    admind = models.CharField(max_length=20, blank=True, null=True)
+    a_idx = models.AutoField(primary_key=True)
+    a_id = models.CharField(max_length=20, blank=True, null=True)
+    a_pw = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = True

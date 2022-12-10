@@ -136,7 +136,7 @@ def preprocessing(img_path):
 
     cv2.imwrite(image_path, img_blur_thresh)
     
-    plt_imshow_bgr(img_blur_thresh)
+    # plt_imshow_bgr(img_blur_thresh)
     
     return image_path
 
