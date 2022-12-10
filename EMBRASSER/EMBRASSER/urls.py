@@ -19,7 +19,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index),
-    path("admin/", admin.site.urls),
     path('member/', include('Member.urls')),
     # OCR 업로드
     path('ocr/', include('OCR.urls')),
