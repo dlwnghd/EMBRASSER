@@ -8,11 +8,11 @@
 
         <h1>
             {{menutitle}}
-            <a href="coocr_upload">OCR</a>
+            <a href="ocr/coocr_upload">OCR</a>
         </h1>
 
         <form
-            action="/coocr_upload"
+            action="/ocr/coocr_upload"
             method="post"
             id="Coauthform"
             enctype="multipart/form-data">
@@ -20,10 +20,6 @@
             <input type="file" name="uploadfile" id="uploadfile"/>
             <input type="submit" value="READ"/>
         </form>
-
-        <div style="margin:50px 0;">
-            <button onclick="uploadFile();">READ</button>
-        </div>
 
         <div style="margin:50px 0;">
             <table width="100%">

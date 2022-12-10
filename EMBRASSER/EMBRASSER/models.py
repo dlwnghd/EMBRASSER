@@ -13,9 +13,9 @@ class Members(models.Model):
     scholar = models.CharField(max_length=15, blank=True, null=True)
     sex = models.CharField(max_length=10, blank=True, null=True)
     job = models.CharField(max_length=20, blank=True, null=True)
-    salary = models.IntegerField(blank=True, null=True)
-    property = models.IntegerField(blank=True, null=True)
-    debt = models.IntegerField(blank=True, null=True)
+    salary = models.BigIntegerField(blank=True, null=True)
+    property = models.BigIntegerField(blank=True, null=True)
+    debt = models.BigIntegerField(blank=True, null=True)
     re_marry = models.IntegerField(blank=True, null=True)
     drink = models.IntegerField(blank=True, null=True)
     smoke = models.IntegerField(blank=True, null=True)
@@ -33,9 +33,9 @@ class Members(models.Model):
 
 # 관리자 테이블
 class Admin(models.Model):
-    admin_idx = models.AutoField(primary_key=True)
-    admin_id = models.CharField(max_length=20, blank=True, null=True)
-    admind = models.CharField(max_length=20, blank=True, null=True)
+    a_idx = models.AutoField(primary_key=True)
+    a_id = models.CharField(max_length=20, blank=True, null=True)
+    a_pw = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = True
