@@ -4,7 +4,7 @@ from ocr_module.first_ocr import *
 import os
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 
 from config.State import State
@@ -15,10 +15,13 @@ import uuid
 import time
 import json
 
+# 메인페이지 이동
 def index(request):
     return render(request, 'index.html')
 
-def joinmember(request):
+
+# 회원 등록하기
+def join_customer(request):
     name = request.GET.get('name')
     age = request.GET.get('age')
     p_code = request.GET.get('p_code')
@@ -103,8 +106,7 @@ def joinmember(request):
         print("읽을 수 없는 파일")
     # return joinmember(request, 'joinmember.html')
 
-
-
+# ocr 리턴값
 def coocr_upload(request):
 
     context = {}
