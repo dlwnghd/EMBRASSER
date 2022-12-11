@@ -326,7 +326,7 @@ def member_search(request):
     q.add(Q(grade=word), q.OR)
 
     print('💚💚💚', word)
-    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade').order_by("-pub_date")  # 데이터 조회
+    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade').order_by("idx")  # 데이터 조회
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
