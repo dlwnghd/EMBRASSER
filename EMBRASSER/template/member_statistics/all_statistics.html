@@ -7,23 +7,42 @@
     <link rel="stylesheet" href ="{% static '/css/statistics.css' %}">
 {%endblock%}
 
+
 {%block script%}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static '/js/statistics.js' %}"></script>
 {%endblock%}
 
-
 {%block content%}
+<!-- <div style="background-color:lightgray;"> -->
+    
     <div class="donut">
-        <div class="ring chart" data-size="400" data-value="50" data-arrow="up">
+        <div class="donutchart ring" data-size="200" data-value="{{mat_success}}" data-arrow="up">
         </div>
+        <p class="donutchart_name">매칭 성공률</p>
     </div>
-    <br>
-    {{mat_success}}/
-    {{mat_fail}}/
-    {{sex_wo}}/
-    {{sex_man}}/
-    {{all}}/
-    {{salary_avg}}/
-    {{age_avg}}/
+    <div id="shiva">
+        <span class="count">{{tot_mem}}</span>
+        <p class="count_name">가입자 수</p>
+    </div>
+    <div class="empty-div"></div>
+    <div>
+        <!-- style="position :relative; top: 250px; left:-430px;" -->
+        <table>
+            <tr>
+                <th>성비(남 / 여)</th>
+                <td>{{sex_wo}} / {{sex_man}}</td>
+            </tr>
+            <tr>
+                <th>평균 연봉</th>
+                <td>{{salary_avg}}</td>
+            </tr>
+            <tr>
+                <th>평균 나이</th>
+                <td>{{age_avg}}</td>
+            </tr>
+        </table>
+    </div>
+<!-- </div> -->
 
 {%endblock%}
