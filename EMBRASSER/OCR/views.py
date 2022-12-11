@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 
 from EMBRASSER.models import Members
+from django.core.paginator import Paginator
 
 def coocr_upload(request):
 
@@ -302,6 +303,15 @@ def joinmember(request):
             
         print(e)
     # return joinmember(request, 'joinmember.html')
+
+# 회원 리스트 보기
+def member_list(request):
+    all_boards = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
+    paginator = Paginator(all_boards, 10)                # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))               # 처음에 보여줄 페이지 설정
+    board_list = paginator.get_page(page)
+    context = {'title':'Member List', 'board_list':board_list}
+    return render(request, 'member_list.html', context)
 
 # 회원정보 수정하기 페이지로 이동
 def modify_customer(request:HttpRequest):

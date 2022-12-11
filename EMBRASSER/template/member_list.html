@@ -10,12 +10,16 @@
         }
 
         .content {
-            max-width:500px;
+            max-width:70%;
             margin: auto;
             padding:10px;
         }
 
         .header {
+            text-align: center;
+        }
+
+        td{
             text-align: center;
         }
 
@@ -52,23 +56,21 @@
         <div class="header">
             <h2>{{ title }}</h2>
         </div>
-        <div style="text-align:right">
-            <a href="">등록</a>
-        </div>
 
-        <div style="height:280px;">
+        <div>
             <table class="board">
                 <thead>
                     <tr class="header">
-                        <th style="width:10%">순번</th>
-                        <th style="width:15%">이름</th>
-                        <th style="width:10%">성별</th>
-                        <th style="width:15%">종교</th>
-                        <th style="width:10%">직업</th>
-                        <th style="width:10%">재산</th>
-                        <th style="width:10%">키</th>
-                        <th style="width:10%">체중</th>
-                        <th style="width:10%">등급</th>
+                        <th style="width:5%">순번</th>
+                        <th style="width:13%">이름</th>
+                        <th style="width:7%">성별</th>
+                        <th style="width:12%">종교</th>
+                        <th style="width:15%">직업</th>
+                        <th style="width:13%">재산</th>
+                        <th style="width:7%">키</th>
+                        <th style="width:7%">체중</th>
+                        <th style="width:5%">등급</th>
+                        <th style="width:16%">옵션</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,14 +78,16 @@
                     {% for data in board_list %}
                     <tr class="{% cycle '' 'even_bgcolor' %}">
                         <td style="text-align:center;">{{ data.idx }}</td>
-                        <td><a href="">{{ data.name }}</a></td>
+                        <td>{{ data.name }}</td>
                         <td>{{ data.sex }}</td>
                         <td>{{ data.religion }}</td>
                         <td>{{ data.job }}</td>
                         <td>{{ data.property }}</td>
-                        <td>{{ data.height }}</td>
-                        <td>{{ data.weight }}</td>
+                        <td>{{ data.height }}cm</td>
+                        <td>{{ data.weight }}kg</td>
                         <td>{{ data.grade }}</td>
+                        <td style="display: flex;
+    justify-content: space-evenly;""><button><a href="/ocr/modify_customer?idx={{data.idx}}">수정</a></button><button><a href="/ocr/modify_customer?idx={{data.idx}}">삭제</a></button></td>
                     </tr>
                     {% endfor %}
                 {% else %}

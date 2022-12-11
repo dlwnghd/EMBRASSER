@@ -7,4 +7,5 @@ urlpatterns = [
     path('joinmember', views.joinmember),
     path('modify_customer', views.modify_customer),
     path('modify_confirm', views.modify_confirm),
+    path('list', views.member_list),
 ]
