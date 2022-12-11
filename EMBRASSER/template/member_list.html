@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style type="text/css">
+        thead {
+            background-color:#cecece;
+        }
+
+        .content {
+            max-width:500px;
+            margin: auto;
+            padding:10px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .board {
+            width: 100%
+        }
+
+        .even_bgcolor {
+            background-color:#e8efff;
+        }
+
+        .pagination {
+            display: flex;           
+        }
+
+        .current {
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .abutton {
+            background-color: #e6e6ff;
+            color: #7b7b7b;
+            font-size: small;
+        }
+
+    </style>
+<body>
+    <div class="content">
+        <div class="header">
+            <h2>{{ title }}</h2>
+        </div>
+        <div style="text-align:right">
+            <a href="">등록</a>
+        </div>
+
+        <div style="height:280px;">
+            <table class="board">
+                <thead>
+                    <tr class="header">
+                        <th style="width:10%">순번</th>
+                        <th style="width:15%">이름</th>
+                        <th style="width:10%">성별</th>
+                        <th style="width:15%">종교</th>
+                        <th style="width:10%">직업</th>
+                        <th style="width:10%">재산</th>
+                        <th style="width:10%">키</th>
+                        <th style="width:10%">체중</th>
+                        <th style="width:10%">등급</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if board_list %}
+                    {% for data in board_list %}
+                    <tr class="{% cycle '' 'even_bgcolor' %}">
+                        <td style="text-align:center;">{{ data.idx }}</td>
+                        <td><a href="">{{ data.name }}</a></td>
+                        <td>{{ data.sex }}</td>
+                        <td>{{ data.religion }}</td>
+                        <td>{{ data.job }}</td>
+                        <td>{{ data.property }}</td>
+                        <td>{{ data.height }}</td>
+                        <td>{{ data.weight }}</td>
+                        <td>{{ data.grade }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td>가입한 회원이 없습니다.</td></tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div style="text-align:center">
+            <div class="pagination">
+            
+                <div style="width:35%; margin: 5px;">
+                {% if board_list.has_previous %}
+                    <a class="abutton" href="?page=1">맨 앞으로</a>
+                    <a class="abutton" href="?page={{ board_list.previous_page_number }}">이전</a>
+                {% endif %}
+                </div>
+
+                <div style="width:30%; margin: 5px;">
+                {% for page in board_list.paginator.page_range %}
+                    {% if page >= board_list.number|add:-2 and page <= board_list.number|add:2 %}
+                    <span class="{% if page == board_list.number %}current{% endif %}">
+                        <a href="?page={{ page }}">{{ page}}</a>
+                    </span>
+                    {% elif page >= board_list.number|add:-3 and page <= board_list.number|add:3 %}
+                        ..
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+                <div style="width:35%; margin: 5px;">
+                {% if board_list.has_next %}
+                    <a class="abutton" href="?page={{ board_list.next_page_number }}">다음</a>
+                    <a class="abutton" href="?page={{ board_list.paginator.num_pages }}">맨 뒤로</a>
+                {% endif %}
+                </div>
+
+            </div>  
+        </div> 
+    </div>
+</body>
+</html>
