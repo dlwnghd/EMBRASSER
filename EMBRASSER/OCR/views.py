@@ -19,12 +19,13 @@ from django.db.models import Q      # filter OR 사용하는 모듈
 from django.db.models import Count, Avg, Sum
 
 
-def coocr_upload(request):
-
+def coocr_first (request):
     context = {}
-    context['menutitle'] = 'OCR READ'
+    context['menutitle'] = '회원 등록'
 
     imgname = ''
+    image_file = ''
+    bounding_path = ''
 
     # Upload할 파일을 Web에서 받아온다면
     if 'uploadfile' in request.FILES:
@@ -43,26 +44,15 @@ def coocr_upload(request):
             # API 키 불러오기
             api_url = 'https://89w7f3qfa7.apigw.ntruss.com/custom/v1/19515/7dc8cb6af87386e43b045c2c4b47139b424763a831b47a497b51c005c2cb894c/general'
             secret_key = 'WEtTcUlIRmZGSENGU1RoSVBSR21vR3piY05IcGNMS1E='
-
-            print("")
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            print("fs.base_location : ",fs.base_location + fs.url(imgname))
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            print("")
             
             # 신청서
             try:
-
                 image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
             except Exception as e:
                 print(e)
                 image_file = fs.base_location + fs.url(imgname)
                 
             json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
-
-            print("777777777777777777777777777777")
-            print("json_file : ", json_file)
-            print("777777777777777777777777777777")
 
             # 결과 json
             request_json = {
@@ -89,28 +79,24 @@ def coocr_upload(request):
             response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
 
             local = json.loads(response.text.encode('utf8'))
-            
 
-            #==============================
-            # ocr2 = OCR(local)
+            ocr = OCR(local)
             
-            # list = ocr2.main_sentences
+            all_sentences = ocr.plusword()
             
-            # confirm_form = ""
-            # for li in list:
-            #     confirm_form += li.replace(" ", '')
-            
-            # if "회원가입신청서" not in confirm_form:
-            #     msg = "회원가입신청서 형식이 아닙니다."
-            #     return redirect("url", msg)
+            confirm_form = ""
+            for li in all_sentences:
+                confirm_form += li.replace(" ", '')
+                
+            if "회원가입신청서" not in confirm_form:
+                msg = {'alrt' : False,
+                    'imgname' : ''}
+                return render(request, 'member_ocr_f.html', msg)
 
-            #==============================
-
-            print("11111111111111" , local)
             with open(json_file, 'w', encoding='utf-8') as outfile:
-                print("2222222222222222")
                 json.dump(local, outfile, indent=4, ensure_ascii=False)
-            print("3333333333333333333")
+
+            bounding_path = bounding_img(image_file, json_file)
 
             sentences = {('성명(한글)','나이(만)'):'name',
             '나이(만)':'age',
@@ -132,34 +118,336 @@ def coocr_upload(request):
             ('체중(kg)', '형제관계'):'weight',
             '형제관계':'family'}
 
-            ocr = OCR(local)
             context['resulttext'] = ocr.result_application(sentences)
 
     # context에 데이터 담기
     context['imgname'] = imgname
+    context['pre_img'] = image_file[14:]
+    context['bounding_img'] = bounding_path[14:]
 
-    return render(request, 'member_ocr.html', context)
+    return render(request, 'member_ocr_f.html', context)
 
-def joinmember(request):
-    name = request.GET.get('name')
-    age = int(request.GET.get('age'))
-    p_code = request.GET.get('p_code')
-    phone = request.GET.get('phone')
-    email = request.GET.get('email')
-    addr = request.GET.get('addr')
-    religion = request.GET.get('religion')
-    scholar = request.GET.get('scholar')
-    sex = request.GET.get('sex')
-    job = request.GET.get('job')
-    salary = request.GET.get('salary')
-    property = request.GET.get('property')
-    debt = request.GET.get('debt')
-    re_marry = request.GET.get('re_marry')
-    drink = request.GET.get('drink')
-    smoke = request.GET.get('smoke')
-    height = request.GET.get('height')
-    weight = request.GET.get('weight')
-    family = request.GET.get('family')
+def coocr_second (request):
+    name = request.POST.get('name')
+    age = request.POST.get('age')
+    p_code = request.POST.get('p_code')
+    phone = request.POST.get('phone')
+    email = request.POST.get('email')
+    addr = request.POST.get('addr')
+    religion = request.POST.get('religion')
+    scholar = request.POST.get('scholar')
+    sex = request.POST.get('sex')
+    job = request.POST.get('job')
+    salary = request.POST.get('salary')
+    property = request.POST.get('property')
+    debt = request.POST.get('debt')
+    re_marry = request.POST.get('re_marry')
+    drink = request.POST.get('drink')
+    smoke = request.POST.get('smoke')
+    height = request.POST.get('height')
+    weight = request.POST.get('weight')
+    family = request.POST.get('family')
+    
+    context = {}
+    context['menutitle'] = '회원 등록2'
+
+    imgname = ''
+    image_file = ''
+    bounding_path = ''
+    
+    name_check = ''
+    pcode_check = ''
+
+    # Upload할 파일을 Web에서 받아온다면
+    if 'uploadfile' in request.FILES:
+        uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
+
+        if uploadfile != '':
+            name_old = uploadfile.name
+
+            # 이미지 파일 저장 경로                         
+            fs = FileSystemStorage(location = 'static/source')
+
+            # 이미지 파일을 저장할때 이미지명
+            imgname = fs.save(f'image/src-{name_old}',uploadfile)
+            img_name, file_type = os.path.splitext(imgname)
+            
+            # API 키 불러오기
+            api_url = 'https://9d3gh23gql.apigw.ntruss.com/custom/v1/19510/d807e8f68a4ff6abcef26f0ed8d896695550657a3a3eb34e243eb056c9e8e474/general'
+            secret_key = 'ZEVjYW53TlpiYkp4eWxGeUJNQ1RTWmJ1aUlETW1ZdkY='
+
+            # 주민등록번호
+            try:
+                image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
+            except Exception as e:
+                print(e)
+                image_file = fs.base_location + fs.url(imgname)
+                
+            json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
+
+            # 결과 json
+            request_json = {
+                'images': [
+                    {
+                        'format': file_type.replace(".",""),    # 포맷 타입
+                        'name': 'demo'                                             # 이름
+                    }
+                ],
+                'requestId': str(uuid.uuid4()),
+                'version': 'V2',
+                'timestamp': int(round(time.time() * 1000))
+            }
+
+            payload = {'message': json.dumps(request_json).encode('UTF-8')}
+            files = [
+            ('file', open(image_file,'rb'))
+            ]
+            headers = {
+            'X-OCR-SECRET': secret_key
+            }
+
+            # 응답
+            response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
+
+            local = json.loads(response.text.encode('utf8'))
+
+            ocr = OCR(local)
+            
+            all_sentences = ocr.plusword()
+            
+            confirm_form = ""
+            for li in all_sentences:
+                confirm_form += li.replace(" ", '')
+                
+            print("confirm_form:", confirm_form)
+            
+            if "주민등록표" not in confirm_form:
+                msg = {'alrt' : False,
+                    'imgname' : '',
+                    'namecheck' : '',
+                    'pcodecheck' : ''}
+                return render(request, 'member_ocr_s.html', msg)
+
+            with open(json_file, 'w', encoding='utf-8') as outfile:
+                json.dump(local, outfile, indent=4, ensure_ascii=False)
+            
+            bounding_path = bounding_img(image_file, json_file)
+            
+            names = ocr.result_IDcard('주민등록번호')
+            
+            name_check = False
+            pcode_check = False
+            for n in names:
+                if n['name'] == name:
+                    name_check = True
+                    if n['code'] == p_code:
+                        pcode_check = True
+                        break
+            for n in names:
+                if n['code'] == p_code:
+                    pcode_check = True
+                    break
+
+    context['resulttext'] = {
+        'name' : name,
+        'age' : age,
+        'p_code' : p_code,
+        'phone' : phone,
+        'email' : email,
+        'addr' : addr,
+        'sex' : sex,
+        'height' : height,
+        'weight' : weight,
+        'family' : family,
+        'job' : job,
+        'salary' : salary,
+        'property' : property,
+        'debt' : debt,
+        'religion' : religion,
+        'drink' : drink,
+        'smoke' : smoke,
+        'scholar' : scholar,
+        're_marry' : re_marry,
+    }
+
+    # context에 데이터 담기
+    context['imgname'] = imgname
+    context['pre_img'] = image_file[14:]
+    context['bounding_img'] = bounding_path[14:]
+    context['namecheck'] = name_check
+    context['pcodecheck'] = pcode_check
+    
+    return render(request, 'member_ocr_s.html', context)
+
+def coocr_third (request):
+    name = request.POST.get('name')
+    age = request.POST.get('age')
+    p_code = request.POST.get('p_code')
+    phone = request.POST.get('phone')
+    email = request.POST.get('email')
+    addr = request.POST.get('addr')
+    religion = request.POST.get('religion')
+    scholar = request.POST.get('scholar')
+    sex = request.POST.get('sex')
+    job = request.POST.get('job')
+    salary = request.POST.get('salary')
+    property = request.POST.get('property')
+    debt = request.POST.get('debt')
+    re_marry = request.POST.get('re_marry')
+    drink = request.POST.get('drink')
+    smoke = request.POST.get('smoke')
+    height = request.POST.get('height')
+    weight = request.POST.get('weight')
+    family = request.POST.get('family')
+    
+    context = {}
+    context['menutitle'] = '회원 등록3'
+
+    imgname = ''
+    image_file = ''
+    bounding_path = ''
+    
+    partner_check = ''
+    child = 0
+
+    # Upload할 파일을 Web에서 받아온다면
+    if 'uploadfile' in request.FILES:
+        uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
+
+        if uploadfile != '':
+            name_old = uploadfile.name
+
+            # 이미지 파일 저장 경로                         
+            fs = FileSystemStorage(location = 'static/source')
+
+            # 이미지 파일을 저장할때 이미지명
+            imgname = fs.save(f'image/src-{name_old}',uploadfile)
+            img_name, file_type = os.path.splitext(imgname)
+            
+            # API 키 불러오기
+            api_url = 'https://9d3gh23gql.apigw.ntruss.com/custom/v1/19510/d807e8f68a4ff6abcef26f0ed8d896695550657a3a3eb34e243eb056c9e8e474/general'
+            secret_key = 'ZEVjYW53TlpiYkp4eWxGeUJNQ1RTWmJ1aUlETW1ZdkY='
+            
+            # 가족관계증명서
+            try:
+                image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
+            except Exception as e:
+                print(e)
+                image_file = fs.base_location + fs.url(imgname)
+                
+            json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
+
+            # 결과 json
+            request_json = {
+                'images': [
+                    {
+                        'format': file_type.replace(".",""),    # 포맷 타입
+                        'name': 'demo'                                             # 이름
+                    }
+                ],
+                'requestId': str(uuid.uuid4()),
+                'version': 'V2',
+                'timestamp': int(round(time.time() * 1000))
+            }
+
+            payload = {'message': json.dumps(request_json).encode('UTF-8')}
+            files = [
+            ('file', open(image_file,'rb'))
+            ]
+            headers = {
+            'X-OCR-SECRET': secret_key
+            }
+
+            # 응답
+            response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
+
+            local = json.loads(response.text.encode('utf8'))
+
+            ocr = OCR(local)
+            
+            all_sentences = ocr.plusword()
+            
+            confirm_form = ""
+            for li in all_sentences:
+                confirm_form += li.replace(" ", '')
+                
+            if "가족관계증명서" not in confirm_form:
+                msg = {'alrt' : False,
+                    'imgname' : ''}
+                return render(request, 'member_ocr_t.html', msg)
+
+            with open(json_file, 'w', encoding='utf-8') as outfile:
+                json.dump(local, outfile, indent=4, ensure_ascii=False)
+            
+            bounding_path = bounding_img(image_file, json_file)
+            
+            family_li = ocr.result_family('구분')
+
+            partner_check = False
+            for f in family_li:
+                if "배우자" in f :
+                    partner_check = True
+                    break
+            for f in family_li:
+                if "자녀" in f :
+                    child = 1
+                    break
+
+    context['resulttext'] = {
+        'name' : name,
+        'age' : age,
+        'p_code' : p_code,
+        'phone' : phone,
+        'email' : email,
+        'addr' : addr,
+        'sex' : sex,
+        'height' : height,
+        'weight' : weight,
+        'family' : family,
+        'job' : job,
+        'salary' : salary,
+        'property' : property,
+        'debt' : debt,
+        'religion' : religion,
+        'drink' : drink,
+        'smoke' : smoke,
+        'scholar' : scholar,
+        're_marry' : re_marry,
+        'partner_check' : partner_check,
+        'child' : child,
+    }
+
+    # context에 데이터 담기
+    context['imgname'] = imgname
+    context['pre_img'] = image_file[14:]
+    context['bounding_img'] = bounding_path[14:]
+    
+    return render(request, 'member_ocr_t.html', context)
+
+
+def join_member(request):
+    context = {}
+    
+    name = request.POST.get('name')
+    age = int(request.POST.get('age'))
+    p_code = request.POST.get('p_code')
+    phone = request.POST.get('phone')
+    email = request.POST.get('email')
+    addr = request.POST.get('addr')
+    religion = request.POST.get('religion')
+    scholar = request.POST.get('scholar')
+    sex = request.POST.get('sex')
+    job = request.POST.get('job')
+    salary = request.POST.get('salary')
+    property = request.POST.get('property')
+    debt = request.POST.get('debt')
+    re_marry = request.POST.get('re_marry')
+    drink = request.POST.get('drink')
+    smoke = request.POST.get('smoke')
+    height = request.POST.get('height')
+    weight = request.POST.get('weight')
+    family = request.POST.get('family')
+    child = request.POST.get('child')
 
     salary = int(salary.replace(",", "").replace(".", ''))
     property = int(property.replace(",", "").replace(".", ''))
@@ -193,9 +481,7 @@ def joinmember(request):
             wweight += w
     weight = int(wweight)
     
-    
-# 등급 매기기
-
+    # ======== 등급 매기기 =========
     # 직업 
     job_grade = {("판사", "의사", "교수", "검사", "박민준", "파일럿", "약사", "프로그래머"): 20,
     ("교사", "은행원", "고위공무원", "대기업", "스타강사", "변호사") : 15,
@@ -272,11 +558,11 @@ def joinmember(request):
         grade = "F"
 
 
-    flag = False
     try :
-        
         Members.objects.get(p_code=p_code)
-        msg = "이미 등록된 회원입니다"
+        context['msg'] = f"{name}님은 이미 등록된 회원입니다."
+        context['flag'] = False
+        
     except Exception as e:
         try:
             Members.objects.create(
@@ -299,17 +585,20 @@ def joinmember(request):
                 smoke = smoke,
                 scholar = scholar,
                 re_marry = re_marry,
+                child = child,
                 grade = grade
             )
-            print("읽을 수 있는 파일!")
-            flag = True
-            msg = "등록이 완료 되었습니다."
+            context['flag'] = True
+            context['name'] = name
+            context['grade'] = grade
+            context['msg'] = "등록이 완료 되었습니다."
         except Exception as ex:
             print(ex)
-            print("읽을 수 없는 파일")
+            context['msg'] = "등록에 실패했습니다.<br>문서를 처음부터 다시 등록해주세요."
+            context['flag'] = False
             
         print(e)
-    # return joinmember(request, 'joinmember.html')
+    return render(request, 'member_ocr_fine.html', context)
 
 def all_statistics(request):
 
