@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from EMBRASSER.models import Members
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 
 # Create your views here.
 
@@ -68,7 +68,7 @@ def login(request:HttpRequest):
         "check" : check,
     }
 
-    return render(request,'login.html',context);
+    return render(request,'login.html',context)
 
 # 관리자 아이디 비번 확인
 def checkLogin(request:HttpRequest):

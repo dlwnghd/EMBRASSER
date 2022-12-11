@@ -1,0 +1,36 @@
+
+thead {
+    background-color:#cecece;
+}
+.content {
+    max-width:70%;
+    margin: auto;
+    padding:10px;
+}
+.header {
+    text-align: center;
+}
+td{
+    text-align: center;
+}
+.board {
+    width: 100%
+}
+.even_bgcolor {
+    background-color:#e8efff;
+}
+.pagination {
+    display: flex;           
+}
+.current {
+    font-weight: bold;
+}
+a {
+    text-decoration: none;
+    text-align: center;
+}
+.abutton {
+    background-color: #e6e6ff;
+    color: #7b7b7b;
+    font-size: small;
+}
