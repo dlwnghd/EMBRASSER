@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>    <!-- AJAX -->
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>                             <!-- 자바스크립 -->
@@ -42,8 +45,11 @@
                         <td>{{ data.height }}cm</td>
                         <td>{{ data.weight }}kg</td>
                         <td>{{ data.grade }}</td>
-                        <td style="display: flex;
-    justify-content: space-evenly;""><button><a href="/ocr/modify_customer?idx={{data.idx}}">수정</a></button><button><a href="/ocr/modify_customer?idx={{data.idx}}">삭제</a></button></td>
+                        <td style="display: flex;justify-content: space-evenly;"">
+                            <button id="modify_button" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
+                            <!-- <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button> -->
+                            <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -93,4 +99,5 @@
 
     <script src="/static/js/member_list.js"></script>  <!-- 여행지정보 js -->   <!-- js 스크립트를 하단에다 놔야 body 실행이 끝날무렵 실행함. -->
 </body>
+<script src="../static/js/member_delete.js"></script>
 </html>
