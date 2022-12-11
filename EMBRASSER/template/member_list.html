@@ -46,9 +46,9 @@
                         <td>{{ data.weight }}kg</td>
                         <td>{{ data.grade }}</td>
                         <td style="display: flex;justify-content: space-evenly;"">
-                            <button id="modify_button" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
+                            <button id="modify_{{data.idx}}" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
                             <!-- <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button> -->
-                            <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
+                            <button id="delete_{{data.idx}}" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -96,8 +96,6 @@
             </div>
         </div> 
     </div>
-
-    <script src="/static/js/member_list.js"></script>  <!-- 여행지정보 js -->   <!-- js 스크립트를 하단에다 놔야 body 실행이 끝날무렵 실행함. -->
 </body>
 <script src="../static/js/member_delete.js"></script>
 </html>
