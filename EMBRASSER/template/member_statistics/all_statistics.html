@@ -1,0 +1,29 @@
+{%extends 'layout/statistics_layout.html'%}
+{% load static %}
+
+{%block title%}전체 회원 통계 {%endblock%}
+
+{%block style%}
+    <link rel="stylesheet" href ="{% static '/css/statistics.css' %}">
+{%endblock%}
+
+{%block script%}
+    <script src="{% static '/js/statistics.js' %}"></script>
+{%endblock%}
+
+
+{%block content%}
+    <div class="donut">
+        <div class="ring chart" data-size="400" data-value="50" data-arrow="up">
+        </div>
+    </div>
+    <br>
+    {{mat_success}}/
+    {{mat_fail}}/
+    {{sex_wo}}/
+    {{sex_man}}/
+    {{all}}/
+    {{salary_avg}}/
+    {{age_avg}}/
+
+{%endblock%}
