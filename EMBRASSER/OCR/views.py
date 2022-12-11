@@ -439,6 +439,7 @@ def join_member(request):
     height = request.POST.get('height')
     weight = request.POST.get('weight')
     family = request.POST.get('family')
+    child = request.POST.get('child')
 
     salary = int(salary.replace(",", "").replace(".", ''))
     property = int(property.replace(",", "").replace(".", ''))
@@ -551,7 +552,7 @@ def join_member(request):
 
     try :
         Members.objects.get(p_code=p_code)
-        context['msg'] = "이미 등록된 회원입니다"
+        context['msg'] = f"{name}님은 이미 등록된 회원입니다."
         context['flag'] = False
         
     except Exception as e:
@@ -576,9 +577,12 @@ def join_member(request):
                 smoke = smoke,
                 scholar = scholar,
                 re_marry = re_marry,
+                child = child,
                 grade = grade
             )
             context['flag'] = True
+            context['name'] = name
+            context['grade'] = grade
             context['msg'] = "등록이 완료 되었습니다."
         except Exception as ex:
             print(ex)

@@ -8,7 +8,7 @@
         <title>Title</title>
     </head>
     <body>
-        <div class=".member_hidden" id="warning">{{alrt}}</div>
+        <div class="member_hidden" id="warning">{{alrt}}</div>
         <h1>
             {{menutitle}}
             <a href="/ocr/coocr_upload">OCR</a>
@@ -98,7 +98,7 @@
                             <div>
                                 이름 : {{resulttext.name}}
                             </div>
-                            <label><input type="checkbox" name="emqhs-name" required>OCR 결과 이름이 일치하지 않습니다. 동일인물이 맞습니까?</label>
+                            <label>OCR 결과 이름이 일치하지 않습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
                         {% else %}
                             <div class="msg">OCR 결과, 두 문서의  이름이 일치합니다.</div>
                         {% endif %}
@@ -109,12 +109,12 @@
                             <div>
                                 주민등록번호 : {{resulttext.p_code}}
                             </div>
-                            <label><input type="checkbox" name="emqhs-name" required>OCR 결과 주민등록번호가 일치하지 않습니다. 동일인물이 맞습니까?</label>
+                            <label>OCR 결과 주민등록번호가 일치하지 않습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
                         {% else %}
                                 <div class="msg">OCR 결과, 두 문서의 주민등록번호가 일치합니다.</div>
                         {% endif %}
 
-                        <button type="submit">등록하기</button>
+                        <button type="submit">NEXT</button>
                     </form>
                 </div>
             </div>

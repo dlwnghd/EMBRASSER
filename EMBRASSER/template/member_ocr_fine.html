@@ -7,14 +7,18 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="msg">
-        {{msg}}
-    </div>
     {% if flag %}
+        <div class="msg">
+            {{name}} 님의 등급 : {{grade}}
+            {{msg}}
+        </div>
         <div class="gofirst">
-            <a href="">HOME</a>
+            <a href="/">HOME</a>
         </div>
     {% else %}
+        <div class="msg">
+            {{msg}}
+        </div>
         <div class="gofirst">
             <a href="/ocr/coocr_first">첫단계로</a>
         </div>
