@@ -14,6 +14,11 @@ from django.core.paginator import Paginator
 
 from django.db.models import Q      # filter OR 사용하는 모듈
 
+
+# 승현, 희지 import
+from django.db.models import Count, Avg, Sum
+
+
 def coocr_upload(request):
 
     context = {}
@@ -305,6 +310,329 @@ def joinmember(request):
             
         print(e)
     # return joinmember(request, 'joinmember.html')
+
+def all_statistics(request):
+
+    # 총 가입자 수 구하기
+    tot_mem = Members.objects.values('idx').aggregate(cnt = Count('idx'))
+    print('tot_mem:  ', tot_mem)
+
+    # 성비, 매칭성공률, 전체 인원 수 , 평균 연봉, 평균 나이
+
+    # 성비
+    sex = Members.objects.values('sex').annotate(all=Count('sex'))
+    for d in sex:
+        if d['sex'] == '남':
+            man = d['all']
+        elif d['sex'] =='여':
+            wo = d['all']
+
+    sex_count = man+wo
+
+    sex_man = round(man/sex_count,2)
+    sex_wo = round(wo/sex_count,2)
+
+    # 매칭성공률
+    # print("매칭이다   ",Members.objects.values("matching").annotate(rate=Count("matching")))
+    matching = Members.objects.values("matching").annotate(rate=Count("matching"))
+
+
+    # 전체 인원수
+    all = Members.objects.aggregate(all=Count('idx'))
+
+    # 평균 연봉
+    salary_avg = Members.objects.aggregate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.aggregate(avg_age=Avg('age'))
+
+
+
+    mat_tot = 0
+
+    for mat in matching:
+        
+        if mat['matching'] in [1,2]:
+            mat_tot += mat['rate']
+            
+            if mat['matching'] == 1:
+                mat_1 = mat['rate']
+            elif mat['matching'] == 2:
+                mat_2 = mat['rate']
+        else:
+            mat_0 = mat['rate']   # 매칭 전 인원 수
+
+
+    mat_success = mat_2 / mat_tot * 100    
+    mat_fail = mat_1 / mat_tot * 100    
+    
+    context = {
+        'tot_mem': tot_mem['cnt'],  
+        "mat_success" : mat_success,
+        "mat_fail" : mat_fail,
+        'mat_0' : mat_0,  # 매칭 전 인원수
+        'sex_man' :sex_man ,
+        'sex_wo' :sex_wo ,
+        'all' : all['all'],
+        'salary_avg' : salary_avg['avg_salary'],
+        'age_avg' : age_avg['avg_age']
+    }
+
+
+    return render(request, 'member_statistics/all_statistics.html', context)
+
+
+
+def grade_statistics(request):
+    context = {}
+    
+    context['A_2'] = 0
+    context['B_2'] = 0
+    context['C_2'] = 0
+    # 등급별 / 성비, 매칭성공률, 전체 인원 수 , 평균 연봉, 평균 나이
+
+    # 성비
+    sex = Members.objects.values('grade').annotate(all=Count('sex'))
+
+    print('sexxxx : ', sex)
+
+
+    # for d in sex:
+    #     if d['grade']
+    #     if d['sex'] == '남':
+    #         man = d['all']
+    #     elif d['sex'] =='여':
+    #         wo = d['all']
+
+    # sex_count = man+wo
+
+    # sex_man = round(man/sex_count,2)
+    # sex_wo = round(wo/sex_count,2)
+
+    # 매칭성공률
+    matching = Members.objects.values('grade', "matching").annotate(mat_count=Count("matching"))
+    print('matching: ',matching)
+
+    # mat_suc_fail = 0   # 매칭 성공 or 실패한 사람
+    mat_suc = 0        # 매칭 성공한 사람
+    
+    for mat in matching:
+
+        if mat['grade'] == 'F':
+
+            if mat['matching'] == 1:
+                context['F_1'] = mat['mat_count']
+
+
+            elif mat['matching'] == 2:
+                context['F_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+                
+
+            else:
+                context['F_0'] = ''
+              
+
+        elif mat['grade'] == 'C':
+
+            if mat['matching'] == 1:
+                context['C_1'] = mat['mat_count']
+             
+
+            elif mat['matching'] == 2:
+                context['C_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['B_0'] = ''
+           
+
+        elif mat['grade'] == 'B':
+
+            if mat['matching'] == 1:
+                context['B_1'] = mat['mat_count']
+             
+
+            elif mat['matching'] == 2:
+                context['B_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['C_0'] = ''
+                
+        elif mat['grade'] == 'A':
+
+            if mat['matching'] == 1:
+                context['A_1'] = mat['mat_count']
+                
+
+            elif mat['matching'] == 2:
+                context['A_2'] = mat['mat_count']
+
+                mat_suc += mat['mat_count']
+
+            else:
+                context['A_0'] = ''
+
+        elif mat['grade'] == 'S':
+
+            if mat['matching'] == 1:
+                context['S_1'] = mat['mat_count']
+                
+
+            elif mat['matching'] == 2:
+                context['S_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['S_0'] = ''
+               
+        
+
+
+    # 등급별 매칭 성공 확률
+    context['mat_suc_S'] = round(context['S_2'] / mat_suc * 100, 2)
+    context['mat_suc_A'] = round(context['A_2'] / mat_suc * 100, 2)
+    context['mat_suc_B'] = round(context['B_2'] / mat_suc * 100, 2)
+    context['mat_suc_C'] = round(context['C_2'] / mat_suc * 100, 2)
+    context['mat_suc_F'] = round(context['F_2'] / mat_suc * 100, 2)
+
+    print("❤", context['mat_suc_S'])
+    print("❤", context['mat_suc_A'])
+    print("❤", context['mat_suc_B'])
+    print("❤", context['mat_suc_C'])
+    print("❤", context['mat_suc_F'])
+
+
+
+
+
+
+    # 전체 인원수
+    all = Members.objects.all().values('grade').annotate(all=Count('idx'))
+
+    # 평균 연봉
+    salary_avg = Members.objects.values('grade').annotate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.values('grade').annotate(avg_age=Avg('age'))
+
+    for ag in salary_avg:
+        if ag['grade'] == "S":
+            context['s_S'] = ag['avg_salary']
+        elif ag['grade'] == "A":
+            context['s_A'] = ag['avg_salary']
+        elif ag['grade'] == "B":
+            context['s_B'] = ag['avg_salary']
+        elif ag['grade'] == "C":
+            context['s_C'] = ag['avg_salary']
+        elif ag['grade'] == "F":
+            context['s_F'] = ag['avg_salary']
+
+    for ag in age_avg:
+        if ag['grade'] == "S":
+            context['age_S'] = ag['avg_age']
+        elif ag['grade'] == "A":
+            context['age_A'] = ag['avg_age']
+        elif ag['grade'] == "B":
+            context['age_B'] = ag['avg_age']
+        elif ag['grade'] == "C":
+            context['age_C'] = ag['avg_age']
+        elif ag['grade'] == "F":
+            context['age_F'] = ag['avg_age']
+
+    for ag in all:
+        if ag['grade'] == "S":
+            context['a_S'] = ag['all']
+        elif ag['grade'] == "A":
+            context['a_A'] = ag['all']
+        elif ag['grade'] == "B":
+            context['a_B'] = ag['all']
+        elif ag['grade'] == "C":
+            context['a_C'] = ag['all']
+        elif ag['grade'] == "F":
+            context['a_F'] = ag['all']
+    
+    # context = {
+    #     # 'sex_man' :sex_man ,
+    #     # 'sex_wo' :sex_wo ,
+    #     'all' : all,
+    #     'salary_avg' : salary_avg,
+    # }
+
+    print('context :  ', context)
+    print('age_avg :  ', age_avg)
+
+    return render(request, 'member_statistics/grade_statistics.html', context)
+
+
+def sex_statistics(request):
+    # 남자 남 , 여자 여 처리
+
+
+    context = {}
+
+
+    # 성별 / 성비, 전체 인원 수 , 평균 연봉, 평균 나이
+
+
+    # 성별 인원 수
+    sex_count = Members.objects.values('sex').annotate(sex_count=Count('idx'))
+
+    for sex in sex_count:
+        if sex['sex'] == '여':
+            context['wo_count'] = sex['sex_count']
+        elif sex['sex'] == '남':
+            context['man_count'] = sex['sex_count']
+
+    # 남자 여자 전체 수
+    tot_sex = context['wo_count'] + context['man_count']
+
+    # 남자/여자 비율
+    context['wo_rate'] = round(context['wo_count']/tot_sex * 100 , 2)
+    context['man_rate'] = round(context['man_count']/tot_sex * 100 , 2)
+
+
+
+
+    # 평균 연봉
+    salary_avg = Members.objects.values('sex').annotate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.values('sex').annotate(avg_age=Avg('age'))
+
+
+    for salary in salary_avg:
+        if salary['sex'] =='여':
+            context['wo_salary'] = salary['avg_salary']
+
+        elif salary['sex'] =='남':
+            context['man_salary'] = salary['avg_salary']
+
+        else:
+            context['salary_etc'] = '' 
+
+
+    for age in age_avg:
+        if age['sex'] =='여':
+            context['wo_age'] = age['avg_age']
+
+        elif age['sex'] =='남':
+            context['man_age'] = age['avg_age']
+
+        else:
+            context['age_etc'] = '' 
+
+        
+
+
+    print('salary_avg: ', salary_avg)
+    print('age_avg: ', age_avg)
+    # context['salary_avg'] = salary_avg
+    # context['age_avg'] = age_avg
+
+
+    return render(request, 'member_statistics/sex_statistics.html', context)
 
 # 회원 리스트 보기
 def member_list(request):
