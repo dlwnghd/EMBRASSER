@@ -1,0 +1,27 @@
+{%extends 'layout/statistics_layout.html'%}
+
+{%block title%}성별 회원 통계 {%endblock%}
+
+{%block content%}
+
+    <table>
+        <tr>
+            <th>구분</th>
+            <th>여자</th>
+            <th>남자</th>
+        </tr>
+
+        <tr>
+            <th>평균 연봉</th>
+            <td>{{wo_salary}}</td>
+            <td>{{man_salary}}</td>
+        </tr>
+        <tr>
+            <th>평균 나이</th>
+            <td>{{wo_age}}</td>
+            <td>{{man_age}}</td>
+        </tr>
+
+    </table>
+
+{%endblock%}
