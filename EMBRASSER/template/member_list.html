@@ -6,54 +6,10 @@
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>                             <!-- 자바스크립 -->
+    <link rel="stylesheet" href="/static/css/member_list.css" />                                <!-- 멤버리스트 css -->
 </head>
-<style type="text/css">
-        thead {
-            background-color:#cecece;
-        }
-
-        .content {
-            max-width:70%;
-            margin: auto;
-            padding:10px;
-        }
-
-        .header {
-            text-align: center;
-        }
-
-        td{
-            text-align: center;
-        }
-
-        .board {
-            width: 100%
-        }
-
-        .even_bgcolor {
-            background-color:#e8efff;
-        }
-
-        .pagination {
-            display: flex;           
-        }
-
-        .current {
-            font-weight: bold;
-        }
-
-        a {
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .abutton {
-            background-color: #e6e6ff;
-            color: #7b7b7b;
-            font-size: small;
-        }
-
-    </style>
 <body>
     <div class="content">
         <div class="header">
@@ -64,19 +20,19 @@
             <table class="board">
                 <thead>
                     <tr class="header">
-                        <th style="width:5%">순번</th>
+                        <th style="width:05%">순번</th>
                         <th style="width:13%">이름</th>
-                        <th style="width:7%">성별</th>
+                        <th style="width:07%">성별</th>
                         <th style="width:12%">종교</th>
                         <th style="width:15%">직업</th>
                         <th style="width:13%">재산</th>
-                        <th style="width:7%">키</th>
-                        <th style="width:7%">체중</th>
-                        <th style="width:5%">등급</th>
+                        <th style="width:07%">키</th>
+                        <th style="width:07%">체중</th>
+                        <th style="width:05%">등급</th>
                         <th style="width:16%">옵션</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                 {% if board_list %}
                     {% for data in board_list %}
                     <tr class="{% cycle '' 'even_bgcolor' %}">
@@ -134,8 +90,14 @@
                 </div>
 
             </div>  
+            <div>
+                <input id="search_word"><button onclick = " location.href = 'search?word=' + document.getElementById('search_word').value">검색</button>
+                <br>(이름 / 성별 / 직업 / 등급 / 종교 )검색 가능합니다.
+            </div>
         </div> 
     </div>
+
+    <script src="/static/js/member_list.js"></script>  <!-- 여행지정보 js -->   <!-- js 스크립트를 하단에다 놔야 body 실행이 끝날무렵 실행함. -->
 </body>
 <script src="../static/js/member_delete.js"></script>
 </html>
