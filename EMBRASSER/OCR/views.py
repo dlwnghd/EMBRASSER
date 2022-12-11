@@ -7,10 +7,12 @@ import json
 import time
 
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from EMBRASSER.models import Members
 from django.core.paginator import Paginator
+
+from django.db.models import Q      # filter OR 사용하는 모듈
 
 def coocr_upload(request):
 
@@ -306,12 +308,32 @@ def joinmember(request):
 
 # 회원 리스트 보기
 def member_list(request):
-    all_boards = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
-    paginator = Paginator(all_boards, 10)                # 페이지에 표시할 갯수
-    page = int(request.GET.get('page', 1))               # 처음에 보여줄 페이지 설정
-    board_list = paginator.get_page(page)
-    context = {'title':'Member List', 'board_list':board_list}
+    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
+    paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
+    member_list = paginator.get_page(page)
+    context = {'title' : 'Member List', 'board_list' : member_list}
     return render(request, 'member_list.html', context)
+
+# 회원 검색
+def member_search(request):
+    word = request.GET.get('word')
+
+    q = Q(name__icontains=word)                            # 참고 URL : https://axce.tistory.com/10 
+    q.add(Q(sex=word), q.OR)
+    q.add(Q(religion=word), q.OR)
+    q.add(Q(job=word), q.OR)
+    q.add(Q(grade=word), q.OR)
+
+    print('💚💚💚', word)
+    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade').order_by("-pub_date")  # 데이터 조회
+    paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
+    member_list = paginator.get_page(page)
+    context = {'title' : 'Member List', 'board_list' : member_list}
+
+    return render(request, 'member_list.html', context)
+
 
 # 회원정보 수정하기 페이지로 이동
 def modify_customer(request:HttpRequest):
