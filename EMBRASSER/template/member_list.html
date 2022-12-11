@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Title</title>
 </head>
 <style type="text/css">
@@ -86,8 +89,11 @@
                         <td>{{ data.height }}cm</td>
                         <td>{{ data.weight }}kg</td>
                         <td>{{ data.grade }}</td>
-                        <td style="display: flex;
-    justify-content: space-evenly;""><button><a href="/ocr/modify_customer?idx={{data.idx}}">수정</a></button><button><a href="/ocr/modify_customer?idx={{data.idx}}">삭제</a></button></td>
+                        <td style="display: flex;justify-content: space-evenly;"">
+                            <button id="modify_button" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
+                            <!-- <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button> -->
+                            <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -131,4 +137,5 @@
         </div> 
     </div>
 </body>
+<script src="../static/js/member_delete.js"></script>
 </html>

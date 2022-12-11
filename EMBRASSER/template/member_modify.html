@@ -5,43 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 수정 페이지</title>
+    <link rel="stylesheet" href="../static/css/member_modify.css">
 </head>
 <body>
-    <div style="margin:50px 0;">
-            <table width="100%">
-                <tr>
-                    <td width="100%">
-                        <pre>
-                            <form action="/ocr/modify_confirm?={{customer.idx}}" method="post" name="new_customer_form">
-                                {% csrf_token %}
-                                <div>
-                                    <input name="idx" type="hidden" value="{{customer.idx}}">
-                                    <div>이름<input name="name" type="text" value="{{customer.name}}"></div>
-                                    <div>나이<input name="age" type="text" value="{{customer.age}}"></div>
-                                    <div>주민번호<input name="p_code" type="text" value="{{customer.p_code}}"></div>
-                                    <div>전화번호<input name="phone" type="text" value="{{customer.phone}}"></div>
-                                    <div>이메일<input name="email" type="text" value="{{customer.email}}"></div>
-                                    <div>주소<input name="addr" type="text" value="{{customer.addr}}"></div>
-                                    <div>종교<input name="religion" type="text" value="{{customer.religion}}"></div>
-                                    <div>학력<input name="scholar" type="text" value="{{customer.scholar}}"></div>
-                                    <div>성별<input name="sex" type="text" value="{{customer.sex}}"></div>
-                                    <div>직업<input name="job" type="text" value="{{customer.job}}"></div>
-                                    <div>연봉<input name="salary" type="text" value="{{customer.salary}}"></div>
-                                    <div>재산<input name="property" type="text" value="{{customer.property}}"></div>
-                                    <div>부채<input name="debt" type="text" value="{{customer.debt}}"></div>
-                                    <div>결혼여부<input name="re_marry" type="text" value="{{customer.re_marry}}"></div>
-                                    <div>음주<input name="drink" type="text" value="{{customer.drink}}"></div>
-                                    <div>담배<input name="smoke" type="text" value="{{customer.smoke}}"></div>
-                                    <div>신장<input name="height" type="text" value="{{customer.height}}"></div>
-                                    <div>몸무게<input name="weight" type="text" value="{{customer.weight}}"></div>
-                                    <div>가족관계<input name="family" type="text" value="{{customer.family}}"></div>
-                                </div>
-                                <button type="submit">수정하기</button>
-                            </form>
-                        </pre>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div>
+        <h2>회원 수정 페이지</h2>
+    </div>
+    <div>
+        <table width="100%">
+            <tr>
+                <td width="100%">
+                    <form action="/ocr/modify_confirm?={{customer.idx}}" method="post" name="new_customer_form">
+                        {% csrf_token %}
+                        <div>
+                            <input name="idx" type="hidden" value="{{customer.idx}}">
+                            <div>이름<input name="name" type="text" value="{{customer.name}}"></div>
+                            <div>나이<input name="age" type="text" value="{{customer.age}}"></div>
+                            <div>주민번호<input name="p_code" type="text" value="{{customer.p_code}}"></div>
+                            <div>전화번호<input name="phone" type="text" value="{{customer.phone}}"></div>
+                            <div>이메일<input name="email" type="text" value="{{customer.email}}"></div>
+                            <div>주소<input name="addr" type="text" value="{{customer.addr}}"></div>
+                            <div>종교<input name="religion" type="text" value="{{customer.religion}}"></div>
+                            <div>학력<input name="scholar" type="text" value="{{customer.scholar}}"></div>
+                            <div>성별<input name="sex" type="text" value="{{customer.sex}}"></div>
+                            <div>직업<input name="job" type="text" value="{{customer.job}}"></div>
+                            <div>연봉<input name="salary" type="text" value="{{customer.salary}}"></div>
+                            <div>재산<input name="property" type="text" value="{{customer.property}}"></div>
+                            <div>부채<input name="debt" type="text" value="{{customer.debt}}"></div>
+                            <div>결혼여부<input name="re_marry" type="text" value="{{customer.re_marry}}"></div>
+                            <div>음주<input name="drink" type="text" value="{{customer.drink}}"></div>
+                            <div>담배<input name="smoke" type="text" value="{{customer.smoke}}"></div>
+                            <div>신장<input name="height" type="text" value="{{customer.height}}"></div>
+                            <div>몸무게<input name="weight" type="text" value="{{customer.weight}}"></div>
+                            <div>가족관계<input name="family" type="text" value="{{customer.family}}"></div>
+                        </div>
+                        <button type="submit">수정하기</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>

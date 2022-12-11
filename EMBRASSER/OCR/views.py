@@ -430,9 +430,16 @@ def modify_confirm(request:HttpRequest):
         print(e)
         return render(request, 'index.html')
 
-    member = Members.objects.get(idx=1)
+    member = Members.objects.get(idx=request.POST.get("idx"))
     context = {
         'member' : member
     }
 
-    return redirect('/')
+    return redirect('/ocr/list')
+
+# 회원정보 삭제
+def delete_customer(request:HttpRequest):
+    customer = Members.objects.get(idx=request.GET.get("idx"))
+    customer.delete()
+
+    return redirect('/ocr/list')
