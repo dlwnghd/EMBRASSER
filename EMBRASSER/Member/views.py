@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from EMBRASSER.models import Members
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -68,7 +69,7 @@ def login(request:HttpRequest):
         "check" : check,
     }
 
-    return render(request,'login.html',context);
+    return render(request,'login.html',context)
 
 # 관리자 아이디 비번 확인
 def checkLogin(request:HttpRequest):
@@ -109,3 +110,14 @@ def checkLogin(request:HttpRequest):
 def logout(request:HttpRequest):
     request.session.pop('login')
     return redirect('/')
+
+
+
+# 멤버 리스트 보기
+def member_list(request):
+    all_boards = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
+    paginator = Paginator(all_boards, 10)                # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))               # 처음에 보여줄 페이지 설정
+    board_list = paginator.get_page(page)
+    context = {'title':'Board List', 'board_list':board_list}
+    return render(request, 'member_list.html', context)
