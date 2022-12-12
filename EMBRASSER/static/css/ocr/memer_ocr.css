@@ -1,0 +1,10 @@
+.ocr-imgs{
+    height: 40%;
+}
+.ocr_img {
+    width: 25%;
+    height: 48vh;
+}
+.member_hidden {
+    display: none;
+}
