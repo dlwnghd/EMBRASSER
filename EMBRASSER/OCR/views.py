@@ -7,9 +7,17 @@ import json
 import time
 
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from EMBRASSER.models import Members
+from django.core.paginator import Paginator
+
+from django.db.models import Q      # filter OR 사용하는 모듈
+
+
+# 승현, 희지 import
+from django.db.models import Count, Avg, Sum
+
 
 def coocr_first (request):
     context = {}
@@ -587,3 +595,486 @@ def join_member(request):
             
         print(e)
     return render(request, 'member_ocr_fine.html', context)
+
+def all_statistics(request):
+
+    # 총 가입자 수 구하기
+    tot_mem = Members.objects.values('idx').aggregate(cnt = Count('idx'))
+    print('tot_mem:  ', tot_mem)
+
+    # 성비, 매칭성공률, 전체 인원 수 , 평균 연봉, 평균 나이
+
+    # 성비
+    sex = Members.objects.values('sex').annotate(all=Count('sex'))
+    for d in sex:
+        if d['sex'] == '남':
+            man = d['all']
+        elif d['sex'] =='여':
+            wo = d['all']
+
+    sex_count = man+wo
+
+    sex_man = round(man/sex_count,2)
+    sex_wo = round(wo/sex_count,2)
+
+    # 매칭성공률
+    # print("매칭이다   ",Members.objects.values("matching").annotate(rate=Count("matching")))
+    matching = Members.objects.values("matching").annotate(rate=Count("matching"))
+
+
+    # 전체 인원수
+    all = Members.objects.aggregate(all=Count('idx'))
+
+    # 평균 연봉
+    salary_avg = Members.objects.aggregate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.aggregate(avg_age=Avg('age'))
+
+
+
+    mat_tot = 0
+
+    for mat in matching:
+        
+        if mat['matching'] in [1,2]:
+            mat_tot += mat['rate']
+            
+            if mat['matching'] == 1:
+                mat_1 = mat['rate']
+            elif mat['matching'] == 2:
+                mat_2 = mat['rate']
+        else:
+            mat_0 = mat['rate']   # 매칭 전 인원 수
+
+
+    mat_success = mat_2 / mat_tot * 100    
+    mat_fail = mat_1 / mat_tot * 100    
+    
+    context = {
+        'tot_mem': tot_mem['cnt'],  
+        "mat_success" : mat_success,
+        "mat_fail" : mat_fail,
+        'mat_0' : mat_0,  # 매칭 전 인원수
+        'sex_man' :sex_man ,
+        'sex_wo' :sex_wo ,
+        'all' : all['all'],
+        'salary_avg' : salary_avg['avg_salary'],
+        'age_avg' : age_avg['avg_age']
+    }
+
+
+    return render(request, 'member_statistics/all_statistics.html', context)
+
+
+
+def grade_statistics(request):
+    context = {}
+    
+    context['A_2'] = 0
+    context['B_2'] = 0
+    context['C_2'] = 0
+    # 등급별 / 성비, 매칭성공률, 전체 인원 수 , 평균 연봉, 평균 나이
+
+    # 성비
+    sex = Members.objects.values('grade').annotate(all=Count('sex'))
+
+    print('sexxxx : ', sex)
+
+
+    # for d in sex:
+    #     if d['grade']
+    #     if d['sex'] == '남':
+    #         man = d['all']
+    #     elif d['sex'] =='여':
+    #         wo = d['all']
+
+    # sex_count = man+wo
+
+    # sex_man = round(man/sex_count,2)
+    # sex_wo = round(wo/sex_count,2)
+
+    # 매칭성공률
+    matching = Members.objects.values('grade', "matching").annotate(mat_count=Count("matching"))
+    print('matching: ',matching)
+
+    # mat_suc_fail = 0   # 매칭 성공 or 실패한 사람
+    mat_suc = 0        # 매칭 성공한 사람
+    
+    for mat in matching:
+
+        if mat['grade'] == 'F':
+
+            if mat['matching'] == 1:
+                context['F_1'] = mat['mat_count']
+
+
+            elif mat['matching'] == 2:
+                context['F_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+                
+
+            else:
+                context['F_0'] = ''
+              
+
+        elif mat['grade'] == 'C':
+
+            if mat['matching'] == 1:
+                context['C_1'] = mat['mat_count']
+             
+
+            elif mat['matching'] == 2:
+                context['C_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['B_0'] = ''
+           
+
+        elif mat['grade'] == 'B':
+
+            if mat['matching'] == 1:
+                context['B_1'] = mat['mat_count']
+             
+
+            elif mat['matching'] == 2:
+                context['B_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['C_0'] = ''
+                
+        elif mat['grade'] == 'A':
+
+            if mat['matching'] == 1:
+                context['A_1'] = mat['mat_count']
+                
+
+            elif mat['matching'] == 2:
+                context['A_2'] = mat['mat_count']
+
+                mat_suc += mat['mat_count']
+
+            else:
+                context['A_0'] = ''
+
+        elif mat['grade'] == 'S':
+
+            if mat['matching'] == 1:
+                context['S_1'] = mat['mat_count']
+                
+
+            elif mat['matching'] == 2:
+                context['S_2'] = mat['mat_count']
+                mat_suc += mat['mat_count']
+
+            else:
+                context['S_0'] = ''
+               
+        
+
+
+    # 등급별 매칭 성공 확률
+    context['mat_suc_S'] = round(context['S_2'] / mat_suc * 100, 2)
+    context['mat_suc_A'] = round(context['A_2'] / mat_suc * 100, 2)
+    context['mat_suc_B'] = round(context['B_2'] / mat_suc * 100, 2)
+    context['mat_suc_C'] = round(context['C_2'] / mat_suc * 100, 2)
+    context['mat_suc_F'] = round(context['F_2'] / mat_suc * 100, 2)
+
+    print("❤", context['mat_suc_S'])
+    print("❤", context['mat_suc_A'])
+    print("❤", context['mat_suc_B'])
+    print("❤", context['mat_suc_C'])
+    print("❤", context['mat_suc_F'])
+
+
+
+
+
+
+    # 전체 인원수
+    all = Members.objects.all().values('grade').annotate(all=Count('idx'))
+
+    # 평균 연봉
+    salary_avg = Members.objects.values('grade').annotate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.values('grade').annotate(avg_age=Avg('age'))
+
+    for ag in salary_avg:
+        if ag['grade'] == "S":
+            context['s_S'] = ag['avg_salary']
+        elif ag['grade'] == "A":
+            context['s_A'] = ag['avg_salary']
+        elif ag['grade'] == "B":
+            context['s_B'] = ag['avg_salary']
+        elif ag['grade'] == "C":
+            context['s_C'] = ag['avg_salary']
+        elif ag['grade'] == "F":
+            context['s_F'] = ag['avg_salary']
+
+    for ag in age_avg:
+        if ag['grade'] == "S":
+            context['age_S'] = ag['avg_age']
+        elif ag['grade'] == "A":
+            context['age_A'] = ag['avg_age']
+        elif ag['grade'] == "B":
+            context['age_B'] = ag['avg_age']
+        elif ag['grade'] == "C":
+            context['age_C'] = ag['avg_age']
+        elif ag['grade'] == "F":
+            context['age_F'] = ag['avg_age']
+
+    for ag in all:
+        if ag['grade'] == "S":
+            context['a_S'] = ag['all']
+        elif ag['grade'] == "A":
+            context['a_A'] = ag['all']
+        elif ag['grade'] == "B":
+            context['a_B'] = ag['all']
+        elif ag['grade'] == "C":
+            context['a_C'] = ag['all']
+        elif ag['grade'] == "F":
+            context['a_F'] = ag['all']
+    
+    # context = {
+    #     # 'sex_man' :sex_man ,
+    #     # 'sex_wo' :sex_wo ,
+    #     'all' : all,
+    #     'salary_avg' : salary_avg,
+    # }
+
+    print('context :  ', context)
+    print('age_avg :  ', age_avg)
+
+    return render(request, 'member_statistics/grade_statistics.html', context)
+
+
+def sex_statistics(request):
+    # 남자 남 , 여자 여 처리
+
+
+    context = {}
+
+
+    # 성별 / 성비, 전체 인원 수 , 평균 연봉, 평균 나이
+
+
+    # 성별 인원 수
+    sex_count = Members.objects.values('sex').annotate(sex_count=Count('idx'))
+
+    for sex in sex_count:
+        if sex['sex'] == '여':
+            context['wo_count'] = sex['sex_count']
+        elif sex['sex'] == '남':
+            context['man_count'] = sex['sex_count']
+
+    # 남자 여자 전체 수
+    tot_sex = context['wo_count'] + context['man_count']
+
+    # 남자/여자 비율
+    context['wo_rate'] = round(context['wo_count']/tot_sex * 100 , 2)
+    context['man_rate'] = round(context['man_count']/tot_sex * 100 , 2)
+
+
+
+
+    # 평균 연봉
+    salary_avg = Members.objects.values('sex').annotate(avg_salary=Avg('salary'))
+
+    # 평균 나이
+    age_avg = Members.objects.values('sex').annotate(avg_age=Avg('age'))
+
+
+    for salary in salary_avg:
+        if salary['sex'] =='여':
+            context['wo_salary'] = salary['avg_salary']
+
+        elif salary['sex'] =='남':
+            context['man_salary'] = salary['avg_salary']
+
+        else:
+            context['salary_etc'] = '' 
+
+
+    for age in age_avg:
+        if age['sex'] =='여':
+            context['wo_age'] = age['avg_age']
+
+        elif age['sex'] =='남':
+            context['man_age'] = age['avg_age']
+
+        else:
+            context['age_etc'] = '' 
+
+        
+
+
+    print('salary_avg: ', salary_avg)
+    print('age_avg: ', age_avg)
+    # context['salary_avg'] = salary_avg
+    # context['age_avg'] = age_avg
+
+
+    return render(request, 'member_statistics/sex_statistics.html', context)
+
+# 회원 리스트 보기
+def member_list(request):
+    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
+    paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
+    member_list = paginator.get_page(page)
+    context = {'title' : 'Member List', 'board_list' : member_list}
+    return render(request, 'member_list.html', context)
+
+# 회원 검색
+def member_search(request):
+    word = request.GET.get('word')
+
+    q = Q(name__icontains=word)                            # 참고 URL : https://axce.tistory.com/10 
+    q.add(Q(sex=word), q.OR)
+    q.add(Q(religion=word), q.OR)
+    q.add(Q(job=word), q.OR)
+    q.add(Q(grade=word), q.OR)
+
+    print('💚💚💚', word)
+    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade').order_by("idx")  # 데이터 조회
+    paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
+    page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
+    member_list = paginator.get_page(page)
+    context = {'title' : 'Member List', 'board_list' : member_list}
+
+    return render(request, 'member_list.html', context)
+
+
+# 회원정보 수정하기 페이지로 이동
+def modify_customer(request:HttpRequest):
+    idx = request.GET.get('idx')
+    customer = Members.objects.get(idx=idx)
+    context = {
+        'customer' : customer
+    }
+    return render(request,'member_modify.html',context)
+
+# 회원정보 수정 승인
+def modify_confirm(request:HttpRequest):
+    member = Members.objects.get(idx=request.POST.get("idx"))
+    
+    try:
+        # 이름 수정
+        new_name = request.POST.get("name")
+        if new_name != '':
+            member.name = new_name
+        
+        # 나이 수정
+        new_age = request.POST.get("age")
+        if new_age != '':
+            member.age = new_age
+        
+        # 주민번호 수정 
+        new_p_code = request.POST.get("p_code")
+        if new_p_code != '':
+            member.p_code = new_p_code
+
+        # 전화번호 수정
+        new_phone = request.POST.get("phone")
+        if new_phone != '':
+            member.phone = new_phone
+        
+        # 이메일 수정
+        new_email = request.POST.get("email")
+        if new_email != '':
+            member.email = new_email
+
+        # 주소 수정
+        new_addr = request.POST.get("addr")
+        if new_addr != '':
+            member.addr = new_addr
+        
+        # 종교 수정
+        new_religion = request.POST.get("religion")
+        if new_religion != '':
+            member.religion = new_religion
+
+        # 학력 수정
+        new_scholar = request.POST.get("scholar")
+        if new_scholar != '':
+            member.scholar = new_scholar
+
+        # 성별 수정
+        new_sex = request.POST.get("sex")
+        if new_sex != '':
+            member.sex = new_sex
+        
+        # 직업 수정
+        new_job = request.POST.get("job")
+        if new_job != '':
+            member.job = new_job
+
+        # 연봉 수정
+        new_salary = request.POST.get("salary")
+        if new_salary != '':
+            member.salary = new_salary
+
+        # 재산 수정
+        new_property = request.POST.get("property")
+        if new_property != '':
+            member.property = new_property
+
+        # 부채 수정
+        new_debt = request.POST.get("debt")
+        if new_debt != '':
+            member.debt = new_debt
+
+        # 결혼여부 수정
+        new_re_marry = request.POST.get("re_marry")
+        if new_re_marry != '':
+            member.re_marry = new_re_marry
+
+        # 음주 수정
+        new_drink = request.POST.get("drink")
+        if new_drink != '':
+            member.drink = new_drink
+
+        # 담배 수정
+        new_smoke = request.POST.get("smoke")
+        if new_smoke != '':
+            member.smoke = new_smoke
+
+        # 신장 수정
+        new_height = request.POST.get("height")
+        if new_height != '':
+            member.height = new_height
+
+        # 몸무게 수정
+        new_weight = request.POST.get("weight")
+        if new_weight != '':
+            member.weight = new_weight
+
+        # 가족관계 수정
+        new_family = request.POST.get("family")
+        if new_family != '':
+            member.family = new_family
+        
+        # DB에 있는 Members 수정
+        Members.save(member)
+
+    except Exception as e:
+        print("☢️오류발생☢️")
+        print(e)
+        return render(request, 'index.html')
+
+    member = Members.objects.get(idx=request.POST.get("idx"))
+    context = {
+        'member' : member
+    }
+
+    return redirect('/ocr/list')
+
+# 회원정보 삭제
+def delete_customer(request:HttpRequest):
+    customer = Members.objects.get(idx=request.GET.get("idx"))
+    customer.delete()
+
+    return redirect('/ocr/list')
