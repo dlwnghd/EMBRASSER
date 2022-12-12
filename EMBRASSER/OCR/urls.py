@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete_customer',views.delete_customer),
     path('list', views.member_list),
     path('search', views.member_search),
+    path('matching', views.member_matching),
 ]
