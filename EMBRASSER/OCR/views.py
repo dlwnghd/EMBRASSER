@@ -452,6 +452,13 @@ def join_member(request):
     property = int(property.replace(",", "").replace(".", ''))
     debt = int(debt.replace(",", "").replace(".", ''))
 
+    if sex == "남자":
+        sex = '남'
+    elif sex == "여자":
+        sex = '여'
+    else:
+        sex = "모름"
+
     if smoke == "x" or smoke == "X":
         smoke = 0
     else:
@@ -759,8 +766,8 @@ def all_statistics(request):
         'sex_man' :sex_man ,
         'sex_wo' :sex_wo ,
         'all' : all['all'],
-        'salary_avg' : salary_avg['avg_salary'],
-        'age_avg' : age_avg['avg_age']
+        'salary_avg' : round(salary_avg['avg_salary']),
+        'age_avg' : round(age_avg['avg_age'], 2)
     }
 
 
@@ -873,19 +880,6 @@ def grade_statistics(request):
         
 
 
-    # 등급별 매칭 성공 확률
-    context['mat_suc_S'] = round(context['S_2'] / mat_suc * 100, 2)
-    context['mat_suc_A'] = round(context['A_2'] / mat_suc * 100, 2)
-    context['mat_suc_B'] = round(context['B_2'] / mat_suc * 100, 2)
-    context['mat_suc_C'] = round(context['C_2'] / mat_suc * 100, 2)
-    context['mat_suc_F'] = round(context['F_2'] / mat_suc * 100, 2)
-
-    print("❤", context['mat_suc_S'])
-    print("❤", context['mat_suc_A'])
-    print("❤", context['mat_suc_B'])
-    print("❤", context['mat_suc_C'])
-    print("❤", context['mat_suc_F'])
-
 
 
 
@@ -902,27 +896,27 @@ def grade_statistics(request):
 
     for ag in salary_avg:
         if ag['grade'] == "S":
-            context['s_S'] = ag['avg_salary']
+            context['s_S'] = round(ag['avg_salary'])
         elif ag['grade'] == "A":
-            context['s_A'] = ag['avg_salary']
+            context['s_A'] = round(ag['avg_salary'])
         elif ag['grade'] == "B":
-            context['s_B'] = ag['avg_salary']
+            context['s_B'] = round(ag['avg_salary'])
         elif ag['grade'] == "C":
-            context['s_C'] = ag['avg_salary']
+            context['s_C'] = round(ag['avg_salary'])
         elif ag['grade'] == "F":
-            context['s_F'] = ag['avg_salary']
+            context['s_F'] = round(ag['avg_salary'])
 
     for ag in age_avg:
         if ag['grade'] == "S":
-            context['age_S'] = ag['avg_age']
+            context['age_S'] = round(ag['avg_age'], 2)
         elif ag['grade'] == "A":
-            context['age_A'] = ag['avg_age']
+            context['age_A'] = round(ag['avg_age'], 2)
         elif ag['grade'] == "B":
-            context['age_B'] = ag['avg_age']
+            context['age_B'] = round(ag['avg_age'], 2)
         elif ag['grade'] == "C":
-            context['age_C'] = ag['avg_age']
+            context['age_C'] = round(ag['avg_age'], 2)
         elif ag['grade'] == "F":
-            context['age_F'] = ag['avg_age']
+            context['age_F'] = round(ag['avg_age'], 2)
 
     for ag in all:
         if ag['grade'] == "S":
@@ -936,12 +930,13 @@ def grade_statistics(request):
         elif ag['grade'] == "F":
             context['a_F'] = ag['all']
     
-    # context = {
-    #     # 'sex_man' :sex_man ,
-    #     # 'sex_wo' :sex_wo ,
-    #     'all' : all,
-    #     'salary_avg' : salary_avg,
-    # }
+    # 등급별 매칭 성공 확률
+    context['mat_suc_S'] = round(context['S_2'] / context['a_S'] * 100, 2)
+    context['mat_suc_A'] = round(context['A_2'] / context['a_A'] * 100, 2)
+    context['mat_suc_B'] = round(context['B_2'] / context['a_B'] * 100, 2)
+    context['mat_suc_C'] = round(context['C_2'] / context['a_C'] * 100, 2)
+    context['mat_suc_F'] = round(context['F_2'] / context['a_F'] * 100, 2)
+
 
     print('context :  ', context)
     print('age_avg :  ', age_avg)
@@ -986,10 +981,10 @@ def sex_statistics(request):
 
     for salary in salary_avg:
         if salary['sex'] =='여':
-            context['wo_salary'] = salary['avg_salary']
+            context['wo_salary'] = round(salary['avg_salary'])
 
         elif salary['sex'] =='남':
-            context['man_salary'] = salary['avg_salary']
+            context['man_salary'] = round(salary['avg_salary'])
 
         else:
             context['salary_etc'] = '' 
@@ -997,10 +992,10 @@ def sex_statistics(request):
 
     for age in age_avg:
         if age['sex'] =='여':
-            context['wo_age'] = age['avg_age']
+            context['wo_age'] = round(age['avg_age'], 2)
 
         elif age['sex'] =='남':
-            context['man_age'] = age['avg_age']
+            context['man_age'] = round(age['avg_age'], 2)
 
         else:
             context['age_etc'] = '' 
