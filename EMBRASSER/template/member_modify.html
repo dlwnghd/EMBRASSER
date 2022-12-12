@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 수정 페이지</title>
@@ -15,7 +18,7 @@
         <table width="100%">
             <tr>
                 <td width="100%">
-                    <form action="/ocr/modify_confirm?={{customer.idx}}" method="post" name="new_customer_form">
+                    <form id="form"action="/ocr/modify_confirm?={{customer.idx}}" method="post" name="new_customer_form">
                         {% csrf_token %}
                         <div>
                             <input name="idx" type="hidden" value="{{customer.idx}}">
@@ -40,11 +43,13 @@
                             <div>가족관계<input name="family" type="text" value="{{customer.family}}"></div>
                             <div>매칭여부<input name="matching" type="text" value="{{customer.matching}}"></div>
                         </div>
-                        <button type="submit">수정하기</button>
+                        <!-- <button type="submit">수정하기</button> -->
                     </form>
+                    <button id="modify_{{customer.idx}}" type="submit" value="{{customer.idx}}" onclick="modify(id)">수정하기</button>
                 </td>
             </tr>
         </table>
     </div>
 </body>
+<script src="../static/js/member_modify.js"></script>
 </html>
