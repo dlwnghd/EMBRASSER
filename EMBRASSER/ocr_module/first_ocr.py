@@ -242,23 +242,6 @@ class OCR:
                 text += self.local['images'][0]["fields"][i]['inferText']
         return text.replace('\n','')
     
-    
-    # ===========================================
-    # def result_application (self, sentences:list, sentences_dic:list):
-    #     result = {}
-    #     for sentence, sentence_dic in zip(sentences, sentences_dic):
-    #         if type(sentence) == tuple:
-    #             text = self.find_text(sentence[0], sentence[1])
-    #             result[sentence_dic] = text.strip()
-    #         else :
-    #             if sentence == '주소':
-    #                 text = self.find_text(sentence,h_up=1.5, h_down=1.5)
-    #             else :
-    #                 text = self.find_text(sentence)
-
-    #             result[sentence_dic] = text.strip() 
-    #     return result 
-
 
     def result_application (self, sentences:dict):
         result = {}
@@ -306,3 +289,14 @@ class OCR:
             else:
                 break
         return family_li[:-1]
+
+    # ===========================================
+    def result_marry (self, sentences:dict):
+        result_dic = {}
+        
+        for k, v in sentences.items():
+            text = self.find_text(k)
+            result_dic['name'+v] = re.findall('^[가-힣]+',text)[0]
+            result_dic['code'+v] = re.findall('([0-9]{6}-[0-9]{7})',text)[0]
+                
+        return result_dic
