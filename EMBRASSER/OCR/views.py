@@ -596,6 +596,106 @@ def join_member(request):
         print(e)
     return render(request, 'member_ocr_fine.html', context)
 
+def event_first (request):
+    context = {}
+    context['menutitle'] = '이벤트 참여 등록'
+
+    imgname = ''
+    image_file = ''
+    bounding_path = ''
+
+    # Upload할 파일을 Web에서 받아온다면
+    if 'uploadfile' in request.FILES:
+        uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
+
+        if uploadfile != '':
+            name_old = uploadfile.name
+
+            # 이미지 파일 저장 경로                         
+            fs = FileSystemStorage(location = 'static/source')
+
+            # 이미지 파일을 저장할때 이미지명
+            imgname = fs.save(f'image/src-{name_old}',uploadfile)
+            img_name, file_type = os.path.splitext(imgname)
+            
+            # API 키 불러오기
+            api_url = 'https://89w7f3qfa7.apigw.ntruss.com/custom/v1/19515/7dc8cb6af87386e43b045c2c4b47139b424763a831b47a497b51c005c2cb894c/general'
+            secret_key = 'WEtTcUlIRmZGSENGU1RoSVBSR21vR3piY05IcGNMS1E='
+            
+            # 신청서
+            try:
+                image_file = preprocessing(fs.base_location + fs.url(imgname)) # 여기 경로를 수정
+            except Exception as e:
+                print(e)
+                image_file = fs.base_location + fs.url(imgname)
+                
+            json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
+
+            # 결과 json
+            request_json = {
+                'images': [
+                    {
+                        'format': file_type.replace(".",""),    # 포맷 타입
+                        'name': 'demo'                                             # 이름
+                    }
+                ],
+                'requestId': str(uuid.uuid4()),
+                'version': 'V2',
+                'timestamp': int(round(time.time() * 1000))
+            }
+
+            payload = {'message': json.dumps(request_json).encode('UTF-8')}
+            files = [
+            ('file', open(image_file,'rb'))
+            ]
+            headers = {
+            'X-OCR-SECRET': secret_key
+            }
+
+            # 응답
+            response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
+
+            local = json.loads(response.text.encode('utf8'))
+
+            ocr = OCR(local)
+            
+            all_sentences = ocr.plusword()
+            
+            confirm_form = ""
+            for li in all_sentences:
+                confirm_form += li.replace(" ", '')
+                
+            if "혼인관계증명서" not in confirm_form:
+                msg = {'alrt' : False,
+                    'imgname' : ''}
+                return render(request, 'event_ocr_f.html', msg)
+
+            with open(json_file, 'w', encoding='utf-8') as outfile:
+                json.dump(local, outfile, indent=4, ensure_ascii=False)
+
+            bounding_path = bounding_img(image_file, json_file)
+
+            marry_dict = {'본인': "bone", "배우자": "bae"}
+
+            context['resulttext'] = ocr.result_application(marry_dict)
+
+    # context에 데이터 담기
+    context['imgname'] = imgname
+    context['pre_img'] = image_file[14:]
+    context['bounding_img'] = bounding_path[14:]
+
+    return render(request, 'event_ocr_f.html', context)
+
+def event_second (request):
+    context = {}
+    context['menutitle'] = '이벤트 참여 등록'
+
+    imgname = ''
+    image_file = ''
+    bounding_path = ''
+
+    return render(request, 'member_ocr_f.html', context)
+
 def all_statistics(request):
 
     # 총 가입자 수 구하기
@@ -665,8 +765,6 @@ def all_statistics(request):
 
 
     return render(request, 'member_statistics/all_statistics.html', context)
-
-
 
 def grade_statistics(request):
     context = {}
@@ -849,7 +947,6 @@ def grade_statistics(request):
     print('age_avg :  ', age_avg)
 
     return render(request, 'member_statistics/grade_statistics.html', context)
-
 
 def sex_statistics(request):
     # 남자 남 , 여자 여 처리

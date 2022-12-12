@@ -7,6 +7,8 @@ urlpatterns = [
     path('coocr_second', views.coocr_second),
     path('coocr_third', views.coocr_third),
     path('join_member', views.join_member),
+    path('event_first', views.event_first),
+    path('event_second', views.event_second),
     path('all_statistics', views.all_statistics),
     path('grade_statistics', views.grade_statistics),
     path('sex_statistics', views.sex_statistics),
