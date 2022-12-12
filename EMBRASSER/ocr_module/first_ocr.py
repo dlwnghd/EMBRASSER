@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import json
 import matplotlib.pyplot as plt
 
 def cv2_imshow(image):
@@ -106,9 +107,6 @@ def preprocessing(img_path):
 
     dst = cv2.warpPerspective(img, M, (max_width, max_height))
     
-    
-    
-    
     # warpPerspective 한 후 전처리 하기
     
     gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
@@ -140,7 +138,30 @@ def preprocessing(img_path):
     
     return image_path
 
+def bounding_img(image_file, json_file):
+    file = image_file
+    img = cv2.imread(file, cv2.IMREAD_COLOR)
+    file = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    
+    with open(json_file, encoding = 'UTF8' ) as data_file:
+        local = json.load(data_file)
 
+    copy_img = img.copy()
+    for i in local['images'][0]["fields"]:
+        point=i['boundingPoly']['vertices']
+
+        x=int(point[0]['x'])
+        y=int(point[0]['y'])
+        h=int(point[2]["x"])
+        w=int(point[2]['y'])
+
+        cv2.rectangle(copy_img,pt1=(x, y), pt2=(h,w), color=(0, 255, 0), thickness=3)
+            
+    # 바운딩 이미지 저장
+    image_path = "{}_bounding.jpg".format(image_file)
+    cv2.imwrite(image_path, copy_img)
+    
+    return image_path
 
 from operator import itemgetter
 import re
@@ -154,11 +175,13 @@ class OCR:
         self.main_sentences = []
 
     # ===========================================
-    def main_sentences(self):
-        for i in range(len(self.local['images'][0]['fields'])):
-            self.main_sentences.append(self.local['images'][0]['fields'][i]['inferText'])
+    def plusword(self):
+        sentence = []
         
-        return self.main_sentences
+        for i in range(len(self.local['images'][0]['fields'])):
+            sentence.append(self.local['images'][0]['fields'][i]['inferText'])
+        
+        return sentence
     
     # ===========================================
     def max_pos(self, input_text):
@@ -185,8 +208,6 @@ class OCR:
         i_list = []
         text = ''
         one_max, all_max, h = self.max_pos(input_text)
-
-        print("one_max : ", one_max)
 
         if direction == 0:                    # 가로 방향
             if input_text2:                     # 기준이 2개일때
@@ -219,7 +240,6 @@ class OCR:
                 text += self.local['images'][0]["fields"][i]['inferText'] + " "
             else:
                 text += self.local['images'][0]["fields"][i]['inferText']
-
         return text.replace('\n','')
     
     
@@ -260,9 +280,7 @@ class OCR:
     # ===========================================
     def result_IDcard(self, input_text):
     
-    
         name_li = []
-
 
         while True:
             name_dic = {}
@@ -277,12 +295,11 @@ class OCR:
                 break
         return name_li
 
-
     # ===========================================
     def result_family(self, input_text):
         family_li = []
         while True:
-            text = self.find_text(input_text, h_down=3, direction=1)
+            text = self.find_text(input_text, h_down=4, direction=1)
             if text : 
                 family_li.append(text)
                 input_text = text

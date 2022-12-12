@@ -1,43 +1,81 @@
 {%extends 'layout/statistics_layout.html'%}
 
+{% load static %}
+
 {%block title%}등급별 회원 통계 {%endblock%}
 
-{%block content%}
-    <table border="1px;">
-        <tr>
-            <th></th>
-            <th>S등급</th>
-            <th>A등급</th>
-            <th>B등급</th>
-            <th>C등급</th>
-            <th>F등급</th>
-        </tr>
-        <tr>
-            <th>인원수</th>
-            <td>{{a_S}}</td>
-            <td>{{a_A}}</td>
-            <td>{{a_B}}</td>
-            <td>{{a_C}}</td>
-            <td>{{a_F}}</td>
-        </tr>
-        <tr>
-            <th>평균연봉</th>
-            <td>{{s_S}}</td>
-            <td>{{s_A}}</td>
-            <td>{{s_B}}</td>
-            <td>{{s_C}}</td>
-            <td>{{s_F}}</td>
-        </tr>
-        <tr>
-            <th>평균나이</th>
-            <td>{{age_S}}</td>
-            <td>{{age_A}}</td>
-            <td>{{age_B}}</td>
-            <td>{{age_C}}</td>
-            <td>{{age_F}}</td>
-        </tr>
-    </table>
-    <!-- {{sex_wo}}/
-    {{sex_man}}/ -->
+{%block style%}
+    <link rel="stylesheet" href ="{% static '/css/statistics.css' %}">
+{%endblock%}
 
+
+{%block script%}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static '/js/statistics.js' %}"></script>
+{%endblock%}
+
+{%block content%}
+<!-- <div style="background-color:lightgray;"> -->
+    <div class="donut">
+        <div class="ring donutchart" data-size="200" data-value="{{mat_suc_S}}" data-arrow="up">
+        </div>
+        <p class="donutchart_name">S 매칭 성공률</p>
+    </div>
+    <div class="donut">
+        <div class="ring1 donutchart1" data-size="200" data-value="{{mat_suc_A}}" data-arrow="up">
+        </div>
+        <p class="donutchart_name">A 매칭 성공률</p>
+    </div>
+    <div class="donut">
+        <div class="ring2 donutchart2" data-size="200" data-value="{{mat_suc_B}}" data-arrow="up">
+        </div>
+        <p class="donutchart_name">B 매칭 성공률</p>
+    </div>
+    <div class="donut">
+        <div class="ring3 donutchart3" data-size="200" data-value="{{mat_suc_C}}" data-arrow="up">
+        </div>
+        <p class="donutchart_name">C 매칭 성공률</p>
+    </div>
+    <div class="donut">
+        <div class="ring4 donutchart4" data-size="200" data-value="{{mat_suc_F}}" data-arrow="up">
+        </div>
+        <p class="donutchart_name">F 매칭 성공률</p>
+    </div>
+    <div style="padding-top: 10px;">
+        <table border="1px;">
+            <tr>
+                <th></th>
+                <th>S등급</th>
+                <th>A등급</th>
+                <th>B등급</th>
+                <th>C등급</th>
+                <th>F등급</th>
+            </tr>
+            <tr>
+                <th>인원수</th>
+                <td>{{a_S}}</td>
+                <td>{{a_A}}</td>
+                <td>{{a_B}}</td>
+                <td>{{a_C}}</td>
+                <td>{{a_F}}</td>
+            </tr>
+            <tr>
+                <th>평균연봉</th>
+                <td>{{s_S}}</td>
+                <td>{{s_A}}</td>
+                <td>{{s_B}}</td>
+                <td>{{s_C}}</td>
+                <td>{{s_F}}</td>
+            </tr>
+            <tr>
+                <th>평균나이</th>
+                <td>{{age_S}}</td>
+                <td>{{age_A}}</td>
+                <td>{{age_B}}</td>
+                <td>{{age_C}}</td>
+                <td>{{age_F}}</td>
+            </tr>
+        </table>
+    </div>
+<!-- </div> -->
 {%endblock%}
