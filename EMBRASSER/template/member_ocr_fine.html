@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if flag %}
+        <div class="msg">
+            {{name}} 님의 등급 : {{grade}}
+            {{msg}}
+        </div>
+        <div class="gofirst">
+            <a href="/">HOME</a>
+        </div>
+    {% else %}
+        <div class="msg">
+            {{msg}}
+        </div>
+        <div class="gofirst">
+            <a href="/ocr/coocr_first">첫단계로</a>
+        </div>
+    {% endif %}
+</body>
+</html>
