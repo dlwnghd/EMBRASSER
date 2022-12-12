@@ -149,7 +149,7 @@ def coocr_second (request):
     family = request.POST.get('family')
     
     context = {}
-    context['menutitle'] = '회원 등록2'
+    context['menutitle'] = '회원 등록'
 
     imgname = ''
     image_file = ''
@@ -301,7 +301,7 @@ def coocr_third (request):
     family = request.POST.get('family')
     
     context = {}
-    context['menutitle'] = '회원 등록3'
+    context['menutitle'] = '회원 등록'
 
     imgname = ''
     image_file = ''
@@ -312,7 +312,7 @@ def coocr_third (request):
 
     # Upload할 파일을 Web에서 받아온다면
     if 'uploadfile' in request.FILES:
-        uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
+        uploadfile = request.FILES.get('uploadfile','')
 
         if uploadfile != '':
             name_old = uploadfile.name
@@ -342,7 +342,7 @@ def coocr_third (request):
                 'images': [
                     {
                         'format': file_type.replace(".",""),    # 포맷 타입
-                        'name': 'demo'                                             # 이름
+                        'name': 'demo'                          # 이름
                     }
                 ],
                 'requestId': str(uuid.uuid4()),
@@ -364,13 +364,13 @@ def coocr_third (request):
             local = json.loads(response.text.encode('utf8'))
 
             ocr = OCR(local)
-            
+
             all_sentences = ocr.plusword()
-            
+
             confirm_form = ""
             for li in all_sentences:
                 confirm_form += li.replace(" ", '')
-                
+
             if "가족관계증명서" not in confirm_form:
                 msg = {'alrt' : False,
                     'imgname' : ''}
@@ -378,9 +378,9 @@ def coocr_third (request):
 
             with open(json_file, 'w', encoding='utf-8') as outfile:
                 json.dump(local, outfile, indent=4, ensure_ascii=False)
-            
+
             bounding_path = bounding_img(image_file, json_file)
-            
+
             family_li = ocr.result_family('구분')
 
             partner_check = False
@@ -423,7 +423,6 @@ def coocr_third (request):
     context['bounding_img'] = bounding_path[14:]
     
     return render(request, 'member_ocr_t.html', context)
-
 
 def join_member(request):
     context = {}
@@ -542,8 +541,6 @@ def join_member(request):
         grade_property = 20
     else:
         grade_property = 30
-    
-
 
     grade = grade_age + grade_salary + grade_debt + grade_property + grade_job
     if grade >= 90:
@@ -556,7 +553,6 @@ def join_member(request):
         grade = "C"
     else:
         grade = "F"
-
 
     try :
         Members.objects.get(p_code=p_code)
