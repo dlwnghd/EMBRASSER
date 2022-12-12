@@ -39,7 +39,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-EMBRASSER/EMBRASSER/static/source/
+EMBRASSER/static/source/
 BYEOLZZI/BYEOLZZI/migrations/
 BYEOLZZI/migrations/
 migrations/
