@@ -1,5 +1,4 @@
 from django.core.files.storage import FileSystemStorage
-from ocr_module.first_ocr import *
 import requests
 import uuid
 import os
@@ -11,6 +10,10 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from EMBRASSER.models import Members
 from django.core.paginator import Paginator
+
+from ocr_module.first_ocr import *
+from ocr_module.model.utils.Preprocess import Preprocess
+from ocr_module.model.intent.IntentModel import IntentModel
 
 from django.db.models import Q      # filter OR 사용하는 모듈
 
@@ -610,6 +613,9 @@ def event_first (request):
     imgname = ''
     image_file = ''
     bounding_path = ''
+    
+    bone_check = ''
+    bae_check = ''
 
     # Upload할 파일을 Web에서 받아온다면
     if 'uploadfile' in request.FILES:
@@ -658,7 +664,7 @@ def event_first (request):
             headers = {
             'X-OCR-SECRET': secret_key
             }
-
+            
             # 응답
             response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
 
@@ -671,7 +677,7 @@ def event_first (request):
             confirm_form = ""
             for li in all_sentences:
                 confirm_form += li.replace(" ", '')
-                
+            
             if "혼인관계증명서" not in confirm_form:
                 msg = {'alrt' : False,
                     'imgname' : ''}
@@ -682,14 +688,27 @@ def event_first (request):
 
             bounding_path = bounding_img(image_file, json_file)
 
-            marry_dict = {'본인': "bone", "배우자": "bae"}
+            sentences = {'본인': "bone", "배우자": "bae"}
 
-            context['resulttext'] = ocr.result_application(marry_dict)
+            marry_dict = ocr.result_marry(sentences)
+            
+            try :
+                Members.objects.get(name=marry_dict['namebone'], p_code=marry_dict['codebone'])
+                bone_check = True
+                Members.objects.get(name=marry_dict['namebae'], p_code=marry_dict['codebae'])
+                bae_check = True
+                context['flag'] = True
+                context['resulttext'] = marry_dict
+
+            except Exception as e:
+                context['flag'] = False
 
     # context에 데이터 담기
     context['imgname'] = imgname
     context['pre_img'] = image_file[14:]
     context['bounding_img'] = bounding_path[14:]
+    context['bone_check'] = bone_check
+    context['bae_check'] = bae_check
 
     return render(request, 'event_ocr_f.html', context)
 
@@ -700,8 +719,168 @@ def event_second (request):
     imgname = ''
     image_file = ''
     bounding_path = ''
+    
+    bone_check = ''
+    bae_check = ''
+    
+    namebone = request.POST.get('namebone')
+    codebone = request.POST.get('codebone')
+    namebae = request.POST.get('namebae')
+    codebae = request.POST.get('codebae')
+    
+    context['marry_dict'] = {
+        "namebone" : namebone,
+        "codebone" : codebone,
+        "namebae" : namebae,
+        "codebae" : codebae
+    }
 
-    return render(request, 'member_ocr_f.html', context)
+    # Upload할 파일을 Web에서 받아온다면
+    if 'uploadfile' in request.FILES:
+        uploadfile = request.FILES.get('uploadfile','') # upload가 있으면 uploadfile 없으면 " " request
+
+        if uploadfile != '':
+            name_old = uploadfile.name
+
+            # 이미지 파일 저장 경로                         
+            fs = FileSystemStorage(location = 'static/source')
+
+            # 이미지 파일을 저장할때 이미지명
+            imgname = fs.save(f'image/src-{name_old}',uploadfile)
+            img_name, file_type = os.path.splitext(imgname)
+            
+            # API 키 불러오기
+            api_url = 'https://89w7f3qfa7.apigw.ntruss.com/custom/v1/19515/7dc8cb6af87386e43b045c2c4b47139b424763a831b47a497b51c005c2cb894c/general'
+            secret_key = 'WEtTcUlIRmZGSENGU1RoSVBSR21vR3piY05IcGNMS1E='
+            
+            image_file = fs.base_location + fs.url(imgname)
+
+            json_file = fs.base_location + '/json/' + img_name[6:] + '.json'  # ~.jpg.json 형식
+
+            # 결과 json
+            request_json = {
+                'images': [
+                    {
+                        'format': file_type.replace(".",""),    # 포맷 타입
+                        'name': 'demo'                                             # 이름
+                    }
+                ],
+                'requestId': str(uuid.uuid4()),
+                'version': 'V2',
+                'timestamp': int(round(time.time() * 1000))
+            }
+
+            payload = {'message': json.dumps(request_json).encode('UTF-8')}
+            files = [
+            ('file', open(image_file,'rb'))
+            ]
+            headers = {
+            'X-OCR-SECRET': secret_key
+            }
+            
+            # 응답
+            response = requests.request("POST", api_url, headers=headers, data = payload, files = files)
+
+            local = json.loads(response.text.encode('utf8'))
+            
+            # 💙💙💙 이 부분 수정해야 함 ! =====================
+            ocr = OCR(local)
+            
+            all_sentences = ocr.plusword()
+            
+            confirm_form = ""
+            for li in all_sentences:
+                confirm_form += li.replace(" ", '') + ' '
+            
+            # CNN + Bi-LSTM 모델 적용 부분
+            # 전처리 객체 생성
+            p = Preprocess(
+                word2index_dic = 'ocr_module/model/train_tools/invitation.bin',
+                userdic = 'ocr_module/model/utils/user_dic.tsv'
+            )
+            
+            # 의도 파악 모델 (1)
+            intent = IntentModel(model_name='ocr_module/model/intent/Epoch_004_Val_0.000.h5', preprocess=p)
+            
+            intent_predict = intent.predict_class(confirm_form)
+            intent_name = intent.labels[intent_predict]
+
+            if intent_name != "청첩장":
+                msg = {'alrt' : False,
+                    'imgname' : ''}
+                return render(request, 'event_ocr_s.html', msg)
+
+            # ====================================================
+
+            with open(json_file, 'w', encoding='utf-8') as outfile:
+                json.dump(local, outfile, indent=4, ensure_ascii=False)
+
+            bounding_path = bounding_img(image_file, json_file)
+            
+            inv_sentences = confirm_form.replace(" ", '')
+
+            try :
+                if namebone in inv_sentences:
+                    bone_check = 0
+                elif namebone[1:] in inv_sentences:
+                    bone_check = 1
+                else:
+                    bone_check = 2
+
+                if namebae in inv_sentences:
+                    bae_check = 0
+                elif namebae[1:] in inv_sentences:
+                    bae_check = 1
+                else:
+                    bae_check = 2
+
+            except Exception as e:
+                print(e)
+                
+    # context에 데이터 담기
+    context['imgname'] = imgname
+    context['pre_img'] = image_file[14:]
+    context['bounding_img'] = bounding_path[14:]
+    context['bone_check'] = bone_check
+    context['bae_check'] = bae_check
+    
+    return render(request, 'event_ocr_s.html', context)
+
+def event_update (request):
+    context = {}
+    
+    namebone = request.POST.get('namebone')
+    codebone = request.POST.get('codebone')
+    namebae = request.POST.get('namebae')
+    codebae = request.POST.get('codebae')
+    
+    print("💖💖💖namebae:", namebae)
+    print("💖💖💖codebae:", codebae)
+
+    member_bone = Members.objects.get(name=namebone, p_code=codebone)
+    member_bae = Members.objects.get(name=namebae, p_code=codebae)
+    
+    try :
+        member_bone.event = 1
+        member_bae.event = 1
+        
+        member_bone.save()
+        bone_check = True
+        Members.save(member_bae)
+        bae_check = True
+
+        context['flag'] = True
+        # context['namebone'] = namebone
+        # context['namebae'] = namebae
+        context['msg'] = f"{namebone}과 {namebae}님의 이벤트 참가 신청이 완료 되었습니다."
+        
+    except Exception as e:
+        print(e)
+        context['flag'] = False
+        context['msg'] = "등록에 실패했습니다.<br>문서를 처음부터 다시 등록해주세요."
+        return render(request, 'event_result.html', context)
+            
+    return render(request, 'event_result.html', context)
 
 def all_statistics(request):
 
