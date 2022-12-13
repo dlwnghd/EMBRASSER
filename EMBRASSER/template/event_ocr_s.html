@@ -1,0 +1,105 @@
+{%extends 'layout/event_ocr_layout.html'%}
+{% load static %}
+
+{%block style%}
+    <link rel="stylesheet" href ="{% static '/css/ocr/event_ocr.css' %}">
+{%endblock%}
+
+{%block content%}
+<div class="head-title">◆ 신청서</div>
+<form
+    action="/ocr/event_second"
+    method="post"
+    id="appform"
+    enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="uploadfile" id="uploadfile"/>
+    <input name="namebone" type="text" value="{{marry_dict.namebone}}">
+    <input name="codebone" type="text" value="{{marry_dict.codebone}}">
+    <input name="namebae" type="text" value="{{marry_dict.namebae}}">
+    <input name="codebae" type="text" value="{{marry_dict.codebae}}">
+    <button id="read_appImg" type="submit" onclick="">READ</button>
+</form>
+<div class="contents">
+    <div class="contents-part1">
+        <div class="ocr-imgs-ori">
+            <div class="img-title">
+                원본 이미지
+            </div>
+            {% if imgname == '' %}
+                이미지를 READ해 주세요.
+            {% else %}
+                <img class="ocr_img" src="/static/source/{{imgname}}"/>
+            {% endif %}
+        </div>
+        <div class="ocr-imgs-pre">
+            <div class="img-title">
+                전처리 이미지
+            </div>
+            {% if pre_img == '' %}
+                이미지를 READ해 주세요.
+            {% else %}
+                <img class="ocr_img" src="/static/source/{{pre_img}}">
+            {% endif %}
+        </div>  
+    </div>
+    <div class="contents-part2">
+        <div class="ocr-imgs">
+            {% if bounding_img == '' %}
+                이미지를 READ해 주세요.
+            {% else %}
+                <img class="ocr_img" src="/static/source/{{bounding_img}}">
+            {% endif %}
+        </div>
+        <div class="apps">
+            <form action="/ocr/event_update" method="post">
+                {% csrf_token %}
+                {% if bone_check == '' %}
+                    <div></div>
+                {% elif bone_check == 2 %}
+                    <div>
+                        이름 : <input name="namebone" type="text" value="{{marry_dict.namebone}}">
+                        주민등록번호 : <input name="codebone" type="text" value="{{marry_dict.codebone}}">
+                    </div>
+                    <label>OCR 결과, 고객의 이름이 정확하게 조회되지 않았습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
+                {% elif bone_check == 1 %}
+                    <div>
+                        이름 : <input name="namebone" type="text" value="{{marry_dict.namebone}}">
+                        주민등록번호 : <input name="codebone" type="text" value="{{marry_dict.codebone}}">
+                    </div>
+                <div class="msg">OCR 결과, 고객의 이름이 청첩장에서 확인되었습니다</div>
+                {% else %}
+                    <div>
+                        이름 : <input name="namebone" type="text" value="{{marry_dict.namebone}}">
+                        주민등록번호 : <input name="codebone" type="text" value="{{marry_dict.codebone}}">
+                    </div>
+                    <label>OCR 결과 고객의 이름이 청첩장에서 조회되지 않습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
+                {% endif %}
+                    
+                {% if  bae_check == '' %}
+                    <div></div>
+                {% elif bae_check == 2 %}
+                    <div>
+                        이름 : <input name="namebae" type="text" value="{{marry_dict.namebae}}">
+                        주민등록번호 : <input name="codebae" type="text" value="{{marry_dict.codebae}}">
+                    </div>
+                    <label>OCR 결과 고객의 배우자 이름이 정확하게 조회되지 않았습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
+                {% elif bae_check == 1 %}
+                    <div>
+                        이름 : <input name="namebae" type="text" value="{{marry_dict.namebae}}">
+                        주민등록번호 : <input name="codebae" type="text" value="{{marry_dict.codebae}}">
+                    </div>
+                    <div class="msg">OCR 결과, 고객의 배우자 이름이 청첩장에서 확인되었습니다</div>
+                {% else %}
+                    <div>
+                        이름 : <input name="namebae" type="text" value="{{marry_dict.namebae}}">
+                        주민등록번호 : <input name="codebae" type="text" value="{{marry_dict.codebae}}">
+                    </div>
+                    <label>OCR 결과 고객의 배우자 이름이 청첩장에서 조회되지 않습니다. 동일인물이 맞습니까?<input type="checkbox" name="emqhs-name" required></label>
+                {% endif %}
+                <button type="submit">NEXT</button>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}
