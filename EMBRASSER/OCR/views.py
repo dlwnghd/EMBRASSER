@@ -1192,7 +1192,7 @@ def sex_statistics(request):
 
 # 회원 리스트 보기
 def member_list(request):
-    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade')  # 데이터 조회
+    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade', 'matching').order_by("idx")  # 데이터 조회
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
@@ -1210,7 +1210,7 @@ def member_search(request):
     q.add(Q(grade=word), q.OR)
 
     print('💚💚💚', word)
-    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade').order_by("idx")  # 데이터 조회
+    member = Members.objects.filter(q).values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade', 'matching').order_by("idx")  # 데이터 조회
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
@@ -1218,6 +1218,14 @@ def member_search(request):
 
     return render(request, 'member_list.html', context)
 
+# 매칭 업데이트
+def member_matching(request):
+    try:
+        Members.objects.filter(idx=int(request.GET.get('idx'))).update(matching = int(request.GET.get('matching')))
+        context = {'result' : 'ok',}
+    except Exception as e:
+        context = {'result' : 'no',}
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 # 회원정보 수정하기 페이지로 이동
 def modify_customer(request:HttpRequest):
