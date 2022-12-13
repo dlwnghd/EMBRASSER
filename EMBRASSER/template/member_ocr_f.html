@@ -2,73 +2,108 @@
 <html lang="ko">
     <head>
         <meta charset="UTF-8">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <link rel="stylesheet" href="/static/css/ocr/memer_ocr.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="/static/js/ocr/member_ocr.js" type="text/javascript"></script>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="/static/js/ocr/member_ocr.js" type="text/javascript"></script> -->
         <title>Title</title>
     </head>
     <body>
-
         <div class="member_hidden" id="warning">{{alrt}}</div>
-
-        <h1>
-            {{menutitle}}
-            <div class="pages">
-                <div class="first-step">1</div>
-                <div class="second-step">2</div>
-                <div class="third-step">3</div>
+        <div class="header">
+            <div class="head-title">
+                {{menutitle}}
             </div>
-        </h1>
-
-        <h3>신청서</h3>
-        <form
-            action="/ocr/coocr_first"
-            method="post"
-            id="appform"
-            enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="uploadfile" id="uploadfile"/>
-            <button id="read_appImg" type="submit" onclick="">READ</button>
-        </form>
-
-        <div style="margin:50px 0;">
-            <div class="contents">
-                <div class="ocr-imgs">
-                    {% if imgname == '' %}
-                        이미지를 READ해 주세요.
-                    {% else %}
-                        <img class="ocr_img" src="/static/source/{{imgname}}"/>
-                        <img class="ocr_img" src="/static/source/{{pre_img}}">
-                        <img class="ocr_img" src="/static/source/{{bounding_img}}">
-                    {% endif %}
+            <div class="pages">
+                <div class="first-step">
+                    <div class="page-number">1</div>
                 </div>
-                <div class="apps">
-                    <form action="/ocr/coocr_second" method="post">
-                        {% csrf_token %}
-                        <input name="name" type="text" value="{{resulttext.name}}">
-                        <input name="age" type="text" value="{{resulttext.age}}">
-                        <input name="p_code" type="text" value="{{resulttext.p_code}}">
-                        <input name="phone" type="text" value="{{resulttext.phone}}">
-                        <input name="email" type="text" value="{{resulttext.email}}">
-                        <input name="addr" type="text" value="{{resulttext.addr}}">
-                        <input name="religion" type="text" value="{{resulttext.religion}}">
-                        <input name="scholar" type="text" value="{{resulttext.scholar}}">
-                        <input name="sex" type="text" value="{{resulttext.sex}}">
-                        <input name="job" type="text" value="{{resulttext.job}}">
-                        <input name="salary" type="text" value="{{resulttext.salary}}">
-                        <input name="property" type="text" value="{{resulttext.property}}">
-                        <input name="debt" type="text" value="{{resulttext.debt}}">
-                        <input name="re_marry" type="text" value="{{resulttext.re_marry}}">
-                        <input name="drink" type="text" value="{{resulttext.drink}}">
-                        <input name="smoke" type="text" value="{{resulttext.smoke}}">
-                        <input name="height" type="text" value="{{resulttext.height}}">
-                        <input name="weight" type="text" value="{{resulttext.weight}}">
-                        <input name="family" type="text" value="{{resulttext.family}}">
-                        <button type="submit">NEXT</button>
-                    </form>
+                <div class="second-step">
+                    <div class="page-number">2</div>
+                </div>
+                <div class="third-step">
+                    <div class="page-number">3</div>
                 </div>
             </div>
         </div>
-
+        <div class="contents-frame">
+            <div class="head-title">◆ 신청서</div>
+            <form
+                action="/ocr/coocr_first"
+                method="post"
+                id="appform"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- <input type="file" name="uploadfile" id="uploadfile"/> -->
+                <div class="drop-zone">
+                    <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                    <input type="file" name="uploadfile" id="uploadfile" class="drop-zone__input">
+                </div>
+                <button id="read_appImg" type="submit" onclick="">READ</button>
+            </form>
+            <div class="contents">
+                <div class="contents-part1">
+                    <div class="ocr-imgs-ori">
+                        <div class="img-title">
+                            원본 이미지
+                        </div>
+                        {% if imgname == '' %}
+                            이미지를 READ해 주세요.
+                        {% else %}
+                            <img class="ocr_img" src="/static/source/{{imgname}}"/>
+                        {% endif %}
+                    </div>
+                    <div class="ocr-imgs-pre">
+                        <div class="img-title">
+                            전처리 이미지
+                        </div>
+                        {% if pre_img == '' %}
+                            이미지를 READ해 주세요.
+                        {% else %}
+                            <img class="ocr_img" src="/static/source/{{pre_img}}">
+                        {% endif %}
+                    </div>  
+                </div>
+                <div class="contents-part2"></div>
+                    <div class="ocr-imgs">
+                        {% if bounding_img == '' %}
+                            이미지를 READ해 주세요.
+                        {% else %}
+                            <img class="ocr_img" src="/static/source/{{bounding_img}}">
+                        {% endif %}
+                    </div>
+                    <div class="apps">
+                        <form action="/ocr/coocr_second" method="post">
+                            {% csrf_token %}
+                            <input name="name" type="text" value="{{resulttext.name}}">
+                            <input name="age" type="text" value="{{resulttext.age}}">
+                            <input name="p_code" type="text" value="{{resulttext.p_code}}">
+                            <input name="phone" type="text" value="{{resulttext.phone}}">
+                            <input name="email" type="text" value="{{resulttext.email}}">
+                            <input name="addr" type="text" value="{{resulttext.addr}}">
+                            <input name="religion" type="text" value="{{resulttext.religion}}">
+                            <input name="scholar" type="text" value="{{resulttext.scholar}}">
+                            <input name="sex" type="text" value="{{resulttext.sex}}">
+                            <input name="job" type="text" value="{{resulttext.job}}">
+                            <input name="salary" type="text" value="{{resulttext.salary}}">
+                            <input name="property" type="text" value="{{resulttext.property}}">
+                            <input name="debt" type="text" value="{{resulttext.debt}}">
+                            <input name="re_marry" type="text" value="{{resulttext.re_marry}}">
+                            <input name="drink" type="text" value="{{resulttext.drink}}">
+                            <input name="smoke" type="text" value="{{resulttext.smoke}}">
+                            <input name="height" type="text" value="{{resulttext.height}}">
+                            <input name="weight" type="text" value="{{resulttext.weight}}">
+                            <input name="family" type="text" value="{{resulttext.family}}">
+                            <button type="submit">NEXT</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/static/js/ocr/member_ocr.js" type="text/javascript"></script>
+    <script src="/static/js/ocr/event_ocr.js" type="text/javascript"></script>
 </html>
