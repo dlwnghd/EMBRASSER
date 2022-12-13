@@ -455,9 +455,9 @@ def join_member(request):
     property = int(property.replace(",", "").replace(".", ''))
     debt = int(debt.replace(",", "").replace(".", ''))
 
-    if sex == "남자":
+    if sex == "남자" or sex == '남':
         sex = '남'
-    elif sex == "여자":
+    elif sex == "여자" or sex == "여":
         sex = '여'
     else:
         sex = "모름"
@@ -1192,7 +1192,7 @@ def sex_statistics(request):
 
 # 회원 리스트 보기
 def member_list(request):
-    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade', 'matching').order_by("idx")  # 데이터 조회
+    member = Members.objects.filter().values('idx', 'name', 'sex', 'religion', 'job', 'property', 'height', 'weight', 'grade', 'matching').order_by("-idx")  # 데이터 조회
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
