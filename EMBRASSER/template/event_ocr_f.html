@@ -13,7 +13,11 @@
     id="appform"
     enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="uploadfile" id="uploadfile"/>
+    <!-- <input type="file" name="uploadfile" id="uploadfile"/> -->
+    <div class="drop-zone">
+        <span class="drop-zone__prompt">Drop file here or click to upload</span>
+        <input type="file" name="uploadfile" id="uploadfile" class="drop-zone__input">
+    </div>
     <button id="read_appImg" type="submit" onclick="">READ</button>
 </form>
 <div class="contents">
