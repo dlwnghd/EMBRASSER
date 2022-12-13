@@ -1335,6 +1335,11 @@ def modify_confirm(request:HttpRequest):
         new_family = request.POST.get("family")
         if new_family != '':
             member.family = new_family
+
+        # 매칭 수정
+        new_matching = request.POST.get("matching")
+        if new_matching != '':
+            member.matching = new_matching
         
         # DB에 있는 Members 수정
         Members.save(member)

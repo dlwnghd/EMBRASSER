@@ -26,14 +26,4 @@ function delete_confirm(id) {
                 })
             }
         })
-    // num = document
-    //     .getElementById(id)
-    //     .value;
-    // if (!confirm("회원을 삭제하시겠습니까?")) {
-    //     // 취소(아니오) 버튼 클릭 시 이벤트
-    //     return;
-    // } else {
-    //     // 확인(예) 버튼 클릭 시 이벤트
-    //     window.location.href = "http://127.0.0.1:8000/ocr/delete_customer?idx=" + num;
-    // }
 }
