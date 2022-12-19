@@ -853,9 +853,6 @@ def event_update (request):
     codebone = request.POST.get('codebone')
     namebae = request.POST.get('namebae')
     codebae = request.POST.get('codebae')
-    
-    print("💖💖💖namebae:", namebae)
-    print("💖💖💖codebae:", codebae)
 
     member_bone = Members.objects.get(name=namebone, p_code=codebone)
     member_bae = Members.objects.get(name=namebae, p_code=codebae)
@@ -1000,13 +997,11 @@ def grade_statistics(request):
 
             else:
                 context['F_0'] = ''
-              
 
         elif mat['grade'] == 'C':
 
             if mat['matching'] == 1:
                 context['C_1'] = mat['mat_count']
-             
 
             elif mat['matching'] == 2:
                 context['C_2'] = mat['mat_count']
@@ -1014,13 +1009,11 @@ def grade_statistics(request):
 
             else:
                 context['B_0'] = ''
-           
 
         elif mat['grade'] == 'B':
 
             if mat['matching'] == 1:
                 context['B_1'] = mat['mat_count']
-             
 
             elif mat['matching'] == 2:
                 context['B_2'] = mat['mat_count']
@@ -1055,14 +1048,6 @@ def grade_statistics(request):
 
             else:
                 context['S_0'] = ''
-               
-        
-
-
-
-
-
-
 
     # 전체 인원수
     all = Members.objects.all().values('grade').annotate(all=Count('idx'))
