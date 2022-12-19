@@ -2,21 +2,40 @@
 <html lang="ko">
     <head>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/css/index.css">
+		<link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Gowun+Dodum&family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
         <title>Title</title>
     </head>
     <body>
+        <div class="navbar_menu"></div>
+        <nav class="navbar">
+            <div class="navbar_title">EMBRASSER</div>
+            <ul class="navbar_ul">
+                <li class="customer_menu"><a class="menu_link" href="/ocr/coocr_first">OCR</a></li>
+                <li class="customer_menu"><a class="menu_link" href="/ocr/all_statistics">회원통계</a></li>
+                <li class="customer_menu"><a class="menu_link" href="/ocr/event_first">EVENT</a></li>
+                <li class="customer_menu"><a class="menu_link" href="/ocr/list">회원목록</a></li>
+                <li class="member_menu"><img class="login-icon" src="/static/image/login.png"><a class="menu_link" href="/member/login">로그인</a></li>
+            </ul>
+        </nav>
+        <div class="title">EMBRASSER</div>
+        <div class="poam">
+            <div class="poam-script">
+                그대가 잡아준 손이<br>
+                참 따뜻합니다<br>
+                오랫동안 아주 오랫동안<br>
+                같은 길을 바라보며<br>
+                걸어가고 싶습니다<br>
+            </div>
+            <div class="poam-writter">
+                - 서윤덕 <함께>
+            </div>
+        </div>
 
-        <h1>
-            {{menutitle}}
-            <a href="/ocr/coocr_first">OCR</a>
-
-
-            <a href="/ocr/all_statistics">회원통계</a>
-
-            <a href="/ocr/event_first">EVENT</a>
-            
-            <a href="/ocr/list">회원목록</a>
-        </h1>
-
+        <div class="back-img">
+            <img id="back-img" src="/static/image/main_img.jpg"/>
+        </div>
     </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/static/js/index.js" type="text/javascript"></script>
 </html>

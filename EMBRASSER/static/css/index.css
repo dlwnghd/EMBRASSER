@@ -1,0 +1,155 @@
+html {
+    font-family: 'IBM Plex Sans KR', sans-serif !important;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    margin: 0;
+}
+
+.navbar {
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 23%;
+    height: 100%;
+    background-color: rgba(223, 223, 223, 0.879);
+    float: left;
+}
+.navbar.active {
+    display: block;
+}
+
+.navbar_menu {
+    background: url(/static/image/menu.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 5vh;
+    height: 5vh;
+    cursor: pointer;
+    z-index: 999;
+    position: absolute;
+    top: 2.5%;
+    left: 1.5%;
+}
+
+.navbar_menu.active {
+    background: url(/static/image/cancel.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 5vh;
+    height: 5vh;
+    cursor: pointer;
+    z-index: 999;
+    position: absolute;
+    top: 2.5%;
+    left: 1.5%;
+}
+
+.navbar_ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.background {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.679);
+}
+
+.background.active {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.679);
+}
+
+.navbar_title {
+    padding: 4.2% 0 2.5% 25%;
+    margin: 0 0 7% 0;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.customer_title {
+    margin-left: 10%;
+}
+
+.customer_menu {
+    padding: 4% 25%;
+    font-size: 2rem;
+}
+
+.customer_menu:hover {
+    background-color: rgba(239, 239, 239, 0.879);
+    color: rgb(127 38 204);
+}
+
+.login-icon {
+    width: 23%;
+    margin-right: 8%;
+}
+
+.member_menu {
+    padding: 0% 6%;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    margin-top: 104%;
+    float: right;
+}
+
+.menu_link:link,
+.menu_link:visited {
+    color: rgb(31, 31, 31);
+    text-decoration: none;  
+}
+
+.menu_link:hover {
+    text-decoration: none;
+    color: rgb(127 38 204);
+}
+
+.title {
+    width: 50%;
+    margin: 10% 17% 0;
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.poam {
+    width: 50%;
+    margin: 3% 17% 0;
+    font-size: 1.4rem;
+    line-height: 200%;
+}
+
+.poam-script {
+    width: 50%;
+    margin: 5% 1% 0;
+}
+
+.poam-writter {
+    width: 50%;
+    margin: 6% 17% 0;
+}
+
+.back-img {
+    width: 45%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    background-size: contain;
+    float: right;
+    top: 0;
+    right: 0;
+}
+
+#back-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
