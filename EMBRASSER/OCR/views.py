@@ -389,8 +389,10 @@ def coocr_third (request):
             partner_check = False
             for f in family_li:
                 if "배우자" in f :
-                    partner_check = True
-                    break
+                    context['msg'] = "배우자가 있습니다.<br>배우자가 있을 경우 회원 등록이 불가능합니다.<br>확인 후 문서를 처음부터 다시 등록해주세요."
+                    context['flag'] = False
+                    return render(request, 'member_ocr_fine.html', context)
+
             for f in family_li:
                 if "자녀" in f :
                     child = 1
@@ -695,6 +697,8 @@ def event_first (request):
             try :
                 Members.objects.get(name=marry_dict['namebone'], p_code=marry_dict['codebone'])
                 bone_check = True
+                bae_check = False
+                context['resulttext'] = marry_dict
                 Members.objects.get(name=marry_dict['namebae'], p_code=marry_dict['codebae'])
                 bae_check = True
                 context['flag'] = True
