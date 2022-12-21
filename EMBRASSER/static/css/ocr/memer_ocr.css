@@ -131,7 +131,7 @@
 
 button#read_appImg {
     margin: 1% auto;
-    width: 50%;
+    width: 100%;
     padding: 1%;
     display: flex;
     justify-content: center;
