@@ -18,10 +18,11 @@ from ocr_module.model.intent.IntentModel import IntentModel
 from django.db.models import Q      # filter OR 사용하는 모듈
 
 
+
 # 승현, 희지 import
 from django.db.models import Count, Avg, Sum
 
-
+# 회원가입신청서 OCR
 def coocr_first (request):
     context = {}
     context['menutitle'] = '회원 등록'
@@ -130,6 +131,7 @@ def coocr_first (request):
 
     return render(request, 'member_ocr_f.html', context)
 
+# 주민등록등본 OCR
 def coocr_second (request):
     name = request.POST.get('name')
     age = request.POST.get('age')
@@ -282,6 +284,7 @@ def coocr_second (request):
     
     return render(request, 'member_ocr_s.html', context)
 
+# 가족관계증명서 OCR
 def coocr_third (request):
     name = request.POST.get('name')
     age = request.POST.get('age')
@@ -429,6 +432,7 @@ def coocr_third (request):
     
     return render(request, 'member_ocr_t.html', context)
 
+# 회원 등록
 def join_member(request):
     context = {}
     
@@ -608,6 +612,7 @@ def join_member(request):
         print(e)
     return render(request, 'member_ocr_fine.html', context)
 
+# 이벤트 OCR1
 def event_first (request):
     context = {}
     context['menutitle'] = '이벤트 참여 등록'
@@ -716,6 +721,7 @@ def event_first (request):
 
     return render(request, 'event_ocr_f.html', context)
 
+# 이벤트 OCR2
 def event_second (request):
     context = {}
     context['menutitle'] = '이벤트 참여 등록'
@@ -850,6 +856,7 @@ def event_second (request):
     
     return render(request, 'event_ocr_s.html', context)
 
+# 이벤트 update
 def event_update (request):
     context = {}
     
@@ -883,6 +890,7 @@ def event_update (request):
             
     return render(request, 'event_result.html', context)
 
+# 통계
 def all_statistics(request):
 
     # 총 가입자 수 구하기
@@ -953,6 +961,7 @@ def all_statistics(request):
 
     return render(request, 'member_statistics/all_statistics.html', context)
 
+# 등급 통계
 def grade_statistics(request):
     context = {}
     
@@ -1111,6 +1120,7 @@ def grade_statistics(request):
 
     return render(request, 'member_statistics/grade_statistics.html', context)
 
+# 성별 통계
 def sex_statistics(request):
     # 남자 남 , 여자 여 처리
 
