@@ -226,3 +226,29 @@ button#next_button {
     font-weight: 600;
     background: #8a8bf3;
 }
+
+.buttons {
+    display: block;
+    text-align: center;
+}
+
+.gofirst,
+.gomain {
+    margin: 2% 2% 1%;
+    width: 11%;
+    padding: 1.25%;
+    border: 0px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: #8a8bf3;
+    display: inline-block;
+    text-align: center;
+}
+
+.gofirst a,
+.gomain a {
+    color: #FFF;
+    text-decoration: none;
+}

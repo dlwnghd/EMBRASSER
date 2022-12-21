@@ -28,6 +28,10 @@
 
 .ocr_img {
     height: 79vh;
+}
+
+.ocr_img.event {
+    height: 79vh;
     width: 100%;
 }
 
