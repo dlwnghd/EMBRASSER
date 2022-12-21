@@ -5,9 +5,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기본 레이아웃</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Gowun+Dodum&family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    {%block layout_style%}{%endblock%}
+    <title>{%block layout_title%}{%endblock%}</title>
 </head>
 <body>
-    
+    <div class="main_navbar_menu"></div>
+    <nav class="main_navbar">
+        <div class="main_navbar_title">EMBRASSER</div>
+        <ul class="main_navbar_ul">
+            <li class="customer_menu"><a class="menu_link" href="/ocr/coocr_first">회원등록</a></li>
+            <li class="customer_menu"><a class="menu_link" href="/ocr/list">회원목록</a></li>
+            <li class="customer_menu"><a class="menu_link" href="/ocr/all_statistics">회원통계</a></li>
+            <li class="customer_menu"><a class="menu_link" href="/ocr/event_first">EVENT</a></li>
+            <li class="member_menu"><img class="login-icon" src="/static/image/login.png"><a class="menu_link" href="/member/login">로그인</a></li>
+        </ul>
+    </nav>
+    {%block layout_content%}{%endblock%}
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/layout.js" type="text/javascript"></script>
+{%block layout_script%}{%endblock%}
 </html>
