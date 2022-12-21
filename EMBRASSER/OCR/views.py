@@ -18,6 +18,7 @@ from ocr_module.model.intent.IntentModel import IntentModel
 from django.db.models import Q      # filter OR 사용하는 모듈
 
 
+
 # 승현, 희지 import
 from django.db.models import Count, Avg, Sum
 
