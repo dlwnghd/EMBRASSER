@@ -1,0 +1,42 @@
+.title {
+    width: 50%;
+    margin: 10% 17% 0;
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.poam {
+    width: 50%;
+    margin: 3% 17% 0;
+    font-size: 1.4rem;
+    line-height: 200%;
+}
+
+.poam-script {
+    width: 50%;
+    margin: 5% 1% 0;
+}
+
+.poam-writter {
+    width: 50%;
+    margin: 6% 17% 0;
+}
+
+.back-img {
+    width: 45%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    background-size: contain;
+    float: right;
+    top: 0;
+    right: 0;
+}
+
+#back-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
