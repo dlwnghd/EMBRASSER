@@ -1,0 +1,27 @@
+{%extends 'layout/layout.html'%}
+{%load static%}
+
+{%block layout_title%}EVENT::등록{% endblock%}
+
+{%block layout_style%}
+    <link rel="stylesheet" href="/static/css/ocr/event_ocr_layout.css">
+    {%block style%}{%endblock%}
+{%endblock%}
+
+{%block layout_content%}
+    <div class="event_hidden" id="warning">{{alrt}}</div>
+    <div class="header">
+        <div class="head-title">
+            {{menutitle}}
+        </div>
+        {%block page%}{%endblock%}
+    </div>
+    <div class="contents-frame">
+        {%block content%}{%endblock%}
+    </div>
+{%endblock%}
+{%block layout_script%}
+    <script src="/static/js/ocr/member_ocr.js" type="text/javascript"></script>
+    <script src="/static/js/ocr/event_ocr.js" type="text/javascript"></script>
+    {%block script%}{%endblock%}
+{%endblock%}

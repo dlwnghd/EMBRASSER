@@ -1,0 +1,201 @@
+.contents {
+    width: 72%;
+    margin: 0 auto;
+}
+
+.contents-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 4% 0;
+}
+
+.contents-part1 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+}
+.contents-part2 {
+    width: 100%;
+}
+
+.ocr-imgs{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ocr_img {
+    height: 79vh;
+    width: 100%;
+}
+
+.event_hidden {
+    display: none;
+}
+
+#btn-one:not(.collapsed),
+#btn-one:focus {
+    color: rgb(48, 48, 48);
+    font-weight: 600;
+    background-color: #EEF1FF !important;
+    box-shadow: none !important;
+}
+#btn-two:not(.collapsed),
+#btn-two:focus {
+    color: rgb(48, 48, 48);
+    font-weight: 600;
+    background-color: #D2DAFF !important;
+    box-shadow: none !important;
+}
+#btn-three:not(.collapsed),
+#btn-three:focus {
+    color: rgb(48, 48, 48);
+    font-weight: 600;
+    background-color: #bdc7ff !important;
+    box-shadow: none !important;
+}
+#btn-fore:not(.collapsed),
+#btn-fore:focus {
+    color:#FFF !important;
+    font-weight: 600;
+    background-color: #aab6ff !important;
+    box-shadow: none !important;
+}
+#btn-five:not(.collapsed),
+#btn-five:focus {
+    color:#FFF !important;
+    font-weight: 600;
+    background-color: #8a8bf3 !important;
+    box-shadow: none !important;
+}
+
+/* drag and drop css 내용 입니다~~~ */
+.drop-zone {
+    max-width: 50%;
+    height: 79vh;
+    padding: 25px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+    color: #cccccc;
+    border: 4px dashed #A3BFFF;
+    border-radius: 10px;
+}
+
+.drop-zone--over {
+    border-style: solid;
+}
+
+.drop-zone__input {
+    display: none;
+}
+
+.drop-zone__thumb {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #cccccc;
+    background-size: cover;
+    position: relative;
+}
+
+.drop-zone__thumb::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px 0;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    text-align: center;
+}
+
+button#read_appImg {
+    margin: 1% auto;
+    width: 50%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    border: 0px;
+    border-radius: 10px;
+    color:#ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: #9596FF;
+}
+
+.bone-title,
+.bae-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5% 0 1%;
+}
+
+.result-text {
+    margin: 0 1%;
+}
+
+.result-input {
+    margin: 0 1.2% 0 0.7%;
+    border: 0px;
+    border-bottom: 1.5px solid #8a8bf3;
+    padding: 0.5%;
+}
+
+.msg.pass {
+    color: #6263d1;
+    margin: 1% 1% 2%;
+    font-size: 1rem;
+}
+
+.msg.fail {
+    color: #f02680;
+    margin: 1% 1% 2%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.input-check {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    border: 1px solid #ababab;
+    appearance: none;
+    cursor: pointer;
+    margin-left: 7px;
+    background-image:url('/static/image/keep_chk_off.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.input-check:checked {
+    background-color: #f02680;
+    border: 1px solid #f02680;
+}
+
+button#next_button {
+    margin: 2% 0 1% 85%;
+    width: 12%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    border: 0px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: #8a8bf3;
+}

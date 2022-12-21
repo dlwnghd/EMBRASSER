@@ -21,22 +21,23 @@
                 <thead>
                     <tr class="header">
                         <th style="width:05%">순번</th>
-                        <th style="width:13%">이름</th>
+                        <th style="width:12%">이름</th>
                         <th style="width:07%">성별</th>
                         <th style="width:12%">종교</th>
-                        <th style="width:15%">직업</th>
-                        <th style="width:13%">재산</th>
-                        <th style="width:07%">키</th>
-                        <th style="width:07%">체중</th>
+                        <th style="width:13%">직업</th>
+                        <th style="width:10%">재산</th>
+                        <th style="width:05%">키</th>
+                        <th style="width:05%">체중</th>
                         <th style="width:05%">등급</th>
-                        <th style="width:16%">옵션</th>
+                        <th style="width:13%">매칭</th>
+                        <th style="width:13%">옵션</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
                 {% if board_list %}
                     {% for data in board_list %}
                     <tr class="{% cycle '' 'even_bgcolor' %}">
-                        <td style="text-align:center;">{{ data.idx }}</td>
+                        <td style="text-align:center;" class="member_idx">{{ data.idx }}</td>
                         <td>{{ data.name }}</td>
                         <td>{{ data.sex }}</td>
                         <td>{{ data.religion }}</td>
@@ -45,9 +46,15 @@
                         <td>{{ data.height }}cm</td>
                         <td>{{ data.weight }}kg</td>
                         <td>{{ data.grade }}</td>
-                        <td style="display: flex;justify-content: space-evenly;"">
+                        <td>
+                            <select id="matching_{{ data.idx }}" onchange="selectBoxChange(this.value, '{{ data.idx }}');" matching="{{ data.matching }}">
+                                <option value="0">None</option>
+                                <option value="1">실패</option>
+                                <option value="2">성공</option>
+                            </select>
+                        </td>
+                        <td style="display: flex;justify-content: space-evenly;">
                             <button id="modify_{{data.idx}}" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
-                            <!-- <button id="delete_button" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button> -->
                             <button id="delete_{{data.idx}}" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
                         </td>
                     </tr>
@@ -98,4 +105,5 @@
     </div>
 </body>
 <script src="../static/js/member_delete.js"></script>
+<script src="../static/js/member_matching.js"></script>
 </html>

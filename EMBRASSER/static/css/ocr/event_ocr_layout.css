@@ -1,0 +1,54 @@
+.header {
+    text-align: center;
+    margin-top: 5%;
+}
+.head-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 2% 0 1% 0;
+}
+.pages {
+    display: flex;
+    justify-content: center;
+}
+
+.first-step:not(.stepnow),
+.second-step:not(.stepnow),
+.third-step:not(.stepnow) {
+    background-color: #D2DAFF;
+    height: 5vh;
+    width: 5vh;
+    margin: 2% 3%;
+    text-align: center;
+    line-height: 180%;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transform: rotate(45deg);
+}
+
+.first-step,
+.second-step,
+.third-step {
+    background-color: #aab6ff;
+    height: 5vh;
+    width: 5vh;
+    margin: 2% 3%;
+    text-align: center;
+    line-height: 180%;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transform: rotate(45deg);
+}
+
+.page-number:not(.stepnow) {
+    color: rgb(43, 43, 43);
+    transform: rotate(315deg);
+}
+.page-number {
+    color: #FFF;
+    transform: rotate(315deg);
+}
+
+.event_hidden {
+    display: none;
+}
