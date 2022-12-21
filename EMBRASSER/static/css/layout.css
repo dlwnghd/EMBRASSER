@@ -104,7 +104,7 @@ body {
 .menu_link:link,
 .menu_link:visited {
     color: rgb(31, 31, 31);
-    text-decoration: none;  
+    text-decoration: none;
 }
 
 .menu_link:hover {
