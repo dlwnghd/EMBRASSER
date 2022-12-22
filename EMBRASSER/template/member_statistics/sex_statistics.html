@@ -1,8 +1,8 @@
 {%extends 'layout/statistics_layout.html'%}
-
 {% load static %}
 
 {%block title%}성별 회원 통계 {%endblock%}
+
 
 {%block style%}
     <link rel="stylesheet" href ="{% static '/css/statistics.css' %}">
@@ -18,7 +18,9 @@
         margin: 30px auto;
         } */
         section {
-        margin-top: 30px;
+            margin-top: 30px;
+            display: flex;
+            align-items: flex-end;
         }
         .pieID {
         display: inline-block;
@@ -37,7 +39,7 @@
         z-index: 1;
         width: 100px;
         height: 100px;
-        background: #EEE;
+        background: #d2daff;
         border-radius: 50%;
         top: 50px;
         left: 50px;
@@ -47,9 +49,9 @@
         display: block;
         width: 120px;
         height: 2px;
-        background: rgba(0,0,0,0.1);
+        /*background: rgba(0,0,0,0.1);*/
         border-radius: 50%;
-        box-shadow: 0 0 3px 4px rgba(0,0,0,0.1);
+        /*box-shadow: 0 0 3px 4px rgba(0,0,0,0.1);*/
         margin: 220px auto;
         
         }
@@ -72,14 +74,10 @@
         clip: rect(0px, 200px, 200px, 100px);
         }
         .legend {
-        list-style-type: none;
-        padding: 0;
-        margin-top: 10px;
-        background: #FFF;
-        padding: 15px;
-        font-size: 13px;
-        box-shadow: 1px 1px 0 #DDD,
-                    2px 2px 0 #BBB;
+            list-style-type: none;
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 13px;
         }
         .legend li {
         width: 110px;
@@ -97,116 +95,131 @@
     </style>
 {%endblock%}
 
-{%block script%}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{% static '/js/statistics.js' %}"></script>
-    <script>
-        function sliceSize(dataNum, dataTotal) {
-        return (dataNum / dataTotal) * 360;
-        }
-        function addSlice(sliceSize, pieElement, offset, sliceID, color) {
-        $(pieElement).append("<div class='slice "+sliceID+"'><span></span></div>");
-        var offset = offset - 1;
-        var sizeRotation = -179 + sliceSize;
-        $("."+sliceID).css({
-            "transform": "rotate("+offset+"deg) translate3d(0,0,0)"
-        });
-        $("."+sliceID+" span").css({
-            "transform"       : "rotate("+sizeRotation+"deg) translate3d(0,0,0)",
-            "background-color": color
-        });
-        }
-        function iterateSlices(sliceSize, pieElement, offset, dataCount, sliceCount, color) {
-        var sliceID = "s"+dataCount+"-"+sliceCount;
-        var maxSize = 179;
-        if(sliceSize<=maxSize) {
-            addSlice(sliceSize, pieElement, offset, sliceID, color);
-        } else {
-            addSlice(maxSize, pieElement, offset, sliceID, color);
-            iterateSlices(sliceSize-maxSize, pieElement, offset+maxSize, dataCount, sliceCount+1, color);
-        }
-        }
-        function createPie(dataElement, pieElement) {
-        var listData = [];
-        $(dataElement+" span").each(function() {
-            listData.push(Number($(this).html()));
-        });
-        var listTotal = 0;
-        for(var i=0; i<listData.length; i++) {
-            listTotal += listData[i];
-        }
-        var offset = 0;
-        var color = [
-            "cornflowerblue", 
-            "olivedrab", 
-            "orange", 
-            "tomato", 
-            "crimson", 
-            "purple", 
-            "turquoise", 
-            "forestgreen", 
-            "navy", 
-            "gray"
-        ];
-        for(var i=0; i<listData.length; i++) {
-            var size = sliceSize(listData[i], listTotal);
-            iterateSlices(size, pieElement, offset, i, 0, color[i]);
-            $(dataElement+" li:nth-child("+(i+1)+")").css("border-color", color[i]);
-            offset += size;
-        }
-        }
-        createPie(".pieID.legend", ".pieID.pie");
-
-    </script>
+{%block page%}
+<div class="statistics_menu">
+    <div class="cate all">
+        <a class="menu_link" href="/ocr/all_statistics">ALL</a>
+    </div>
+    <div class="cate sex choice">
+        <a class="menu_link" href="/ocr/sex_statistics">GENDER</a>
+    </div>
+    <div class="cate grade">
+        <a class="menu_link" href="/ocr/grade_statistics">GRADE</a>
+    </div>
+</div>
 {%endblock%}
 
 {%block content%}
-<!-- <div style="background-color:lightgray;"> -->
-    <main>
-        <section>
-            <div class="pieID pie">
-                
-            </div>
-            <ul class="pieID legend">
-                <li>
-                    <em>여자</em>
-                    <span>{{wo_count}}</span>
-                    ( {{wo_rate}} % )
-                </li>
-                <li>
-                    <em>남자</em>
-                    <span>{{man_count}}</span>
-                    ( {{man_rate}} % )
-                </li>
-            </ul>
-        </section>
-    </main>      
-    <div>
-        <table>
+<div class="contents sex">
+    <div class="gender_graph">
+        <main>
+            <section>
+                <div class="pieID pie">
+                    
+                </div>
+                <ul class="pieID legend">
+                    <li>
+                        <em>여자</em>
+                        <span>{{wo_count}}</span>
+                        ( {{wo_rate}} % )
+                    </li>
+                    <li>
+                        <em>남자</em>
+                        <span>{{man_count}}</span>
+                        ( {{man_rate}} % )
+                    </li>
+                </ul>
+            </section>
+        </main>      
+    </div>
+    <div class="table_total">
+        <table class="sex_table">
             <tr>
-                <th>구분</th>
-                <th>여자</th>
-                <th>남자</th>
+                <th class="key">구분</th>
+                <th class="val">여자</th>
+                <th class="val">남자</th>
             </tr>
             <tr>
-                <th>인원 수</th>
-                <td>{{wo_count}}</td>
-                <td>{{man_count}}</td>
+                <th class="key">인원 수</th>
+                <td class="val">{{wo_count}}</td>
+                <td class="val">{{man_count}}</td>
             </tr>
             
             <tr>
-                <th>평균 연봉(원)</th>
-                <td>{{wo_salary}}</td>
-                <td>{{man_salary}}</td>
+                <th class="key">평균 연봉(원)</th>
+                <td class="val">{{wo_salary}}</td>
+                <td class="val">{{man_salary}}</td>
             </tr>
             <tr>
-                <th>평균 나이</th>
-                <td>{{wo_age}}</td>
-                <td>{{man_age}}</td>
+                <th class="key">평균 나이</th>
+                <td class="val">{{wo_age}}</td>
+                <td class="val">{{man_age}}</td>
             </tr>
             
         </table>
     </div>
-<!-- </div> -->
-    
-    {%endblock%}
+</div>
+{%endblock%}
+
+{%block script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static '/js/statistics.js' %}"></script>
+<script>
+    function sliceSize(dataNum, dataTotal) {
+    return (dataNum / dataTotal) * 360;
+    }
+    function addSlice(sliceSize, pieElement, offset, sliceID, color) {
+    $(pieElement).append("<div class='slice "+sliceID+"'><span></span></div>");
+    var offset = offset - 1;
+    var sizeRotation = -179 + sliceSize;
+    $("."+sliceID).css({
+        "transform": "rotate("+offset+"deg) translate3d(0,0,0)"
+    });
+    $("."+sliceID+" span").css({
+        "transform"       : "rotate("+sizeRotation+"deg) translate3d(0,0,0)",
+        "background-color": color
+    });
+    }
+    function iterateSlices(sliceSize, pieElement, offset, dataCount, sliceCount, color) {
+    var sliceID = "s"+dataCount+"-"+sliceCount;
+    var maxSize = 179;
+    if(sliceSize<=maxSize) {
+        addSlice(sliceSize, pieElement, offset, sliceID, color);
+    } else {
+        addSlice(maxSize, pieElement, offset, sliceID, color);
+        iterateSlices(sliceSize-maxSize, pieElement, offset+maxSize, dataCount, sliceCount+1, color);
+    }
+    }
+    function createPie(dataElement, pieElement) {
+    var listData = [];
+    $(dataElement+" span").each(function() {
+        listData.push(Number($(this).html()));
+    });
+    var listTotal = 0;
+    for(var i=0; i<listData.length; i++) {
+        listTotal += listData[i];
+    }
+    var offset = 0;
+    var color = [
+        "#7577FF", 
+        "#eef1ff", 
+        "orange", 
+        "tomato", 
+        "crimson", 
+        "purple", 
+        "turquoise", 
+        "forestgreen", 
+        "navy", 
+        "gray"
+    ];
+    for(var i=0; i<listData.length; i++) {
+        var size = sliceSize(listData[i], listTotal);
+        iterateSlices(size, pieElement, offset, i, 0, color[i]);
+        $(dataElement+" li:nth-child("+(i+1)+")").css("border-color", color[i]);
+        offset += size;
+    }
+    }
+    createPie(".pieID.legend", ".pieID.pie");
+
+</script>
+{%endblock%}

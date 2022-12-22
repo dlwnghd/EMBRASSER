@@ -878,9 +878,8 @@ def event_update (request):
         bae_check = True
 
         context['flag'] = True
-        # context['namebone'] = namebone
-        # context['namebae'] = namebae
-        context['msg'] = f"{namebone}과 {namebae}님의 이벤트 참가 신청이 완료 되었습니다."
+        context['namebone'] = namebone
+        context['namebae'] = namebae
         
     except Exception as e:
         print(e)

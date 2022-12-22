@@ -70,7 +70,7 @@
                                     enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <!-- <input type="file" name="uploadfile" id="uploadfile"/> -->
-                                    <div class="drop-zone">
+                                    <div class="drop-zone event">
                                         <span class="drop-zone__prompt">Drop file here or click to upload</span>
                                         <input type="file" name="uploadfile" id="uploadfile" class="drop-zone__input">
                                     </div>
@@ -141,7 +141,7 @@
                                             {% if imgname == '' %}
                                                 이미지를 READ해 주세요.
                                             {% else %}
-                                                <img class="ocr_img" src="/static/source/{{imgname}}"/>
+                                                <img class="ocr_img event" src="/static/source/{{imgname}}"/>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -170,7 +170,7 @@
                                             {% if bounding_img == '' %}
                                                 이미지를 READ해 주세요.
                                             {% else %}
-                                                <img class="ocr_img" src="/static/source/{{bounding_img}}">
+                                                <img class="ocr_img event" src="/static/source/{{bounding_img}}">
                                             {% endif %}
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@
                                 <h2 class="accordion-header" id="headingFive">
                                     <button
                                         id="btn-five"
-                                        class="accordion-button collapsed"
+                                        class="accordion-button"
                                         type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#collapseFive"
@@ -193,9 +193,8 @@
                                 </h2>
                                 <div
                                     id="collapseFive"
-                                    class="accordion-collapse collapse"
-                                    aria-labelledby="headingFive"
-                                    data-bs-parent="#accordionExample">
+                                    class="accordion-collapse collapse show"
+                                    aria-labelledby="headingFive">
                                     <div class="accordion-body">
                                         <div class="results">
                                             <form action="/ocr/event_update" method="post">
@@ -231,7 +230,7 @@
                                                     </div>
                                                     <div class="result-text">
                                                         이름 :
-                                                        <input name="namebone" type="text" value="{{marry_dict.namebone}}">
+                                                        <input class="result-input" name="namebone" type="text" value="{{marry_dict.namebone}}">
                                                         주민등록번호 :
                                                         <input
                                                             class="result-input"

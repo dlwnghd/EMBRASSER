@@ -129,7 +129,7 @@
     text-align: center;
 }
 
-button#read_appImg {
+#read_appImg {
     margin: 1% auto;
     width: 100%;
     padding: 1%;
@@ -181,6 +181,13 @@ button#read_appImg {
     text-align: left;
 }
 
+.result-input:focus,
+.result-input.name:focus,
+.result-input.sex:focus,
+.result-input.addr:focus {
+    outline: none;
+}
+
 .msg {
     display: flex;
     align-items: center;
@@ -222,7 +229,7 @@ button#read_appImg {
     border: 1px solid #8a8bf3;
 }
 
-button#next_button {
+#next_button {
     margin: 2% 0 1% 85%;
     width: 12%;
     padding: 1%;
@@ -234,30 +241,4 @@ button#next_button {
     font-size: 1.2rem;
     font-weight: 600;
     background: #8a8bf3;
-}
-
-.buttons {
-    display: block;
-    text-align: center;
-}
-
-.gofirst,
-.gomain {
-    margin: 2% 2% 1%;
-    width: 11%;
-    padding: 1.25%;
-    border: 0px;
-    border-radius: 10px;
-    color: #ffffff;
-    font-size: 1.2rem;
-    font-weight: 600;
-    background: #8a8bf3;
-    display: inline-block;
-    text-align: center;
-}
-
-.gofirst a,
-.gomain a {
-    color: #FFF;
-    text-decoration: none;
 }
