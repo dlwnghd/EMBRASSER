@@ -4,100 +4,101 @@
     <link rel="stylesheet" href="/static/css/member_list.css" />
 {%endblock%}
 
-{%block layout_title%}EMBRASSER_Title{%endblock%}
+{%block layout_title%}회원 목록{%endblock%}
 
 {%block layout_content%}
-<div class="content">
-    <div class="header" style="height: 150px;">
-        <h1>{{ title }}</h1>
-    </div>
-
-    <div>
-        <table class="board" style="font-size: 1.4rem;">
-            <thead>
-                <tr class="header">
-                    <th style="width:05%">순번</th>
-                    <th style="width:12%">이름</th>
-                    <th style="width:07%">성별</th>
-                    <th style="width:12%">종교</th>
-                    <th style="width:13%">직업</th>
-                    <th style="width:13%">재산</th>
-                    <th style="width:08%">키</th>
-                    <th style="width:08%">체중</th>
-                    <th style="width:05%">등급</th>
-                    <th style="width:6%">매칭</th>
-                    <th style="width:9%">옵션</th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-            {% if board_list %}
-                {% for data in board_list %}
-                <tr class="{% cycle '' 'even_bgcolor' %}">
-                    <td style="text-align:center;" class="member_idx">{{ data.idx }}</td>
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.sex }}</td>
-                    <td>{{ data.religion }}</td>
-                    <td>{{ data.job }}</td>
-                    <td>{{ data.property }}</td>
-                    <td>{{ data.height }}cm</td>
-                    <td>{{ data.weight }}kg</td>
-                    <td>{{ data.grade }}</td>
-                    <td>
-                        <select id="matching_{{ data.idx }}" onchange="selectBoxChange(this.value, '{{ data.idx }}');" matching="{{ data.matching }}">
-                            <option value="0">None</option>
-                            <option value="1">실패</option>
-                            <option value="2">성공</option>
-                        </select>
-                    </td>
-                    <td style="display: flex;justify-content: space-evenly;">
-                        <button id="modify_{{data.idx}}" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
-                        <button id="delete_{{data.idx}}" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr><td>가입한 회원이 없습니다.</td></tr>
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    <div style="text-align:center">
-        <div class="pagination">
-        
-            <div style="width:35%; margin: 5px;">
-            {% if board_list.has_previous %}
-                <a class="abutton" href="?page=1">맨 앞으로</a>
-                <a class="abutton" href="?page={{ board_list.previous_page_number }}">이전</a>
-            {% endif %}
-            </div>
-
-            <div style="width:30%; margin: 5px;">
-            {% for page in board_list.paginator.page_range %}
-                {% if page >= board_list.number|add:-2 and page <= board_list.number|add:2 %}
-                <span class="{% if page == board_list.number %}current{% endif %}">
-                    <a href="?page={{ page }}">{{ page}}</a>
-                </span>
-                {% elif page >= board_list.number|add:-3 and page <= board_list.number|add:3 %}
-                    ..
-                {% endif %}
-            {% endfor %}
-            </div>
-
-            <div style="width:35%; margin: 5px;">
-            {% if board_list.has_next %}
-                <a class="abutton" href="?page={{ board_list.next_page_number }}">다음</a>
-                <a class="abutton" href="?page={{ board_list.paginator.num_pages }}">맨 뒤로</a>
-            {% endif %}
-            </div>
-
-        </div>  
-        <div>
-            <input id="search_word"><button onclick = " location.href = 'search?word=' + document.getElementById('search_word').value">검색</button>
-            <br>(이름 / 성별 / 직업 / 등급 / 종교 )검색 가능합니다.
+<div class="header">
+    <div class="head-title">{{ title }}</div>
+</div>
+<div class="contents-frame">
+    <div class="contents">
+        <div class="search-area">
+            <input class="search-input" id="search_word" placeholder="검색키워드 : 이름 · 성별 · 직업 · 등급 · 종교"><button class="search-bnt" onclick = " location.href = 'search?word=' + document.getElementById('search_word').value">검색</button>
+            <br>
         </div>
-    </div> 
+        <div>
+            <table class="board" style="font-size: 1.4rem;">
+                <thead>
+                    <tr class="header">
+                        <th class="list-num">순번</th>
+                        <th class="list-name">이름</th>
+                        <th class="list-sex">성별</th>
+                        <th class="list-religion">종교</th>
+                        <th class="list-job">직업</th>
+                        <th class="list-property">재산</th>
+                        <th class="list-height">키</th>
+                        <th class="list-weight">체중</th>
+                        <th class="list-grade">등급</th>
+                        <th class="list-matching">매칭</th>
+                        <th class="list-option">옵션</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                {% if board_list %}
+                    {% for data in board_list %}
+                    <tr class="{% cycle '' 'even_bgcolor' %}">
+                        <td class="member_idx">{{ data.idx }}</td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.sex }}</td>
+                        <td>{{ data.religion }}</td>
+                        <td>{{ data.job }}</td>
+                        <td>{{ data.property }}</td>
+                        <td>{{ data.height }}cm</td>
+                        <td>{{ data.weight }}kg</td>
+                        <td>{{ data.grade }}</td>
+                        <td>
+                            <select class="matching-option {% cycle '' 'even' %}" id="matching_{{ data.idx }}" onchange="selectBoxChange(this.value, '{{ data.idx }}');" matching="{{ data.matching }}">
+                                <option value="0">-</option>
+                                <option value="1">실패</option>
+                                <option value="2">성공</option>
+                            </select>
+                        </td>
+                        <td class="list-option-detail">
+                            <button class="modi-bnt {% cycle '' 'even' %}" id="modify_{{data.idx}}" value="{{data.idx}}" onclick="modify_confirm(id)">수정</button>
+                            <button class="del-bnt" id="delete_{{data.idx}}" value="{{data.idx}}" onclick="delete_confirm(id)">삭제</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td>가입한 회원이 없습니다.</td></tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- Pagination -->
+        <div style="text-align:center">
+            <div class="pagination">
+            
+                <div class="pre">
+                {% if board_list.has_previous %}
+                    <a class="abutton" href="/ocr/list?page=1">&#60;&#60;</a>
+                    <a class="abutton" href="/ocr/list?page={{ board_list.previous_page_number }}">&#60;</a>
+                {% endif %}
+                </div>
+    
+                <div class="paging">
+                {% for page in board_list.paginator.page_range %}
+                    {% if page >= board_list.number|add:-2 and page <= board_list.number|add:2 %}
+                    <span class="page_num {% if page == board_list.number %}current{% endif %}">
+                        <a href="?page={{ page }}">{{ page}}</a>
+                    </span>
+                    {% elif page >= board_list.number|add:-3 and page <= board_list.number|add:3 %}
+                        ..
+                    {% endif %}
+                {% endfor %}
+                </div>
+    
+                <div  class="next">
+                {% if board_list.has_next %}
+                    <a class="abutton" href="/ocr/list?page={{ board_list.next_page_number }}">&#62;</a>
+                    <a class="abutton" href="/ocr/list?page={{ board_list.paginator.num_pages }}">&#62;&#62;</a>
+                {% endif %}
+                </div>
+    
+            </div>
+        </div> 
+    </div>
 </div>
 {%endblock%}
 {%block layout_script%}
