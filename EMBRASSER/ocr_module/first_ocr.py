@@ -243,7 +243,7 @@ class OCR:
                 for pos in all_max:
                     # 첫번째 단어의 우측하단의 y 값이 첫번째 단어의 각 모서리의 y값보다 작고
                     # 첫번째 단어의 우측하단의 y 값이 두번째 단어의 각 모서리의 y값보다 크다면
-                    if one_max['y'] < pos['y'] and two_max['y'] > pos['y']:     # 아직 안만듬.
+                    if one_max['y'] < pos['y'] and two_max['y'] > pos['y']: 
                             i_list.append(i)
                     i+=1
             else:
