@@ -19,6 +19,7 @@ body {
     float: left;
     z-index: 5;
 }
+
 .main_navbar.active {
     display: block;
     z-index: 5;
@@ -74,6 +75,12 @@ body {
     font-weight: 600;
 }
 
+.main_navbar_title a:link,
+.main_navbar_title a:visited {
+    color: rgb(31, 31, 31);
+    text-decoration: none;
+}
+
 .customer_title {
     margin-left: 10%;
 }
@@ -104,10 +111,5 @@ body {
 .menu_link:link,
 .menu_link:visited {
     color: rgb(31, 31, 31);
-    text-decoration: none;  
-}
-
-.menu_link:hover {
     text-decoration: none;
-    color: rgb(127 38 204);
 }

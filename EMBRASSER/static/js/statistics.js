@@ -1,4 +1,3 @@
-
 // 매칭성공률 도넛 차트 js
 var Dial1 = function(ring1) {
     this.ring1 = ring1;
@@ -38,17 +37,17 @@ Dial1.prototype.createDefs = function() {
     var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
     linearGradient.setAttribute('id', 'gradient');
     var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-    stop1.setAttribute('stop-color', '#6E4AE2');
+    stop1.setAttribute('stop-color', '#8a8bf3');
     stop1.setAttribute('offset', '0%');
     linearGradient.appendChild(stop1);
     var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-    stop2.setAttribute('stop-color', '#78F8EC');
+    stop2.setAttribute('stop-color', '#D2DAFF');
     stop2.setAttribute('offset', '100%');
     linearGradient.appendChild(stop2);
     var linearGradientBackground = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
     linearGradientBackground.setAttribute('id', 'gradient-background');
     var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-    stop1.setAttribute('stop-color', 'rgba(0, 0, 0, 0.2)');
+    stop1.setAttribute('stop-color', 'rgba(150, 150, 150, 0.15)');
     stop1.setAttribute('offset', '0%');
     linearGradientBackground.appendChild(stop1);
     var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
@@ -90,7 +89,7 @@ Dial1.prototype.createText = function() {
     text.setAttribute('y', (this.size / 2) + fontSize / 4);
     text.setAttribute('font-family', 'Century Gothic, Lato');
     text.setAttribute('font-size', fontSize);
-    text.setAttribute('fill', '#78F8EC');
+    text.setAttribute('fill', '#FFF');
     text.setAttribute('text-anchor', 'middle');
     var tspanSize = fontSize / 3;
     text.innerHTML = 0 + '<tspan font-size="' + tspanSize + '" dy="' + -tspanSize * 1.2 + '">%</tspan>';
@@ -114,7 +113,7 @@ Dial1.prototype.createArrow = function() {
     var arrowDOffset =  m * (arrowSize / 1.5);
     var arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
     arrow.setAttribute('d', 'M 0 0 ' + arrowSize + ' 0 ' + arrowSize / 2 + ' ' + arrowDOffset + ' 0 0 Z');
-    arrow.setAttribute('fill', '#97F8F0');
+    arrow.setAttribute('fill', '#FFF');
     arrow.setAttribute('opacity', '0.6');
     arrow.setAttribute('transform', 'translate(' + arrowPosX + ',' + arrowPosY + ')');
     this.svg.appendChild(arrow);
@@ -271,7 +270,7 @@ Dial1.prototype.createText = function() {
   text.setAttribute('y', (this.size / 2) + fontSize / 4);
   text.setAttribute('font-family', 'Century Gothic, Lato');
   text.setAttribute('font-size', fontSize);
-  text.setAttribute('fill', '#78F8EC');
+  text.setAttribute('fill', '#FFF');
   text.setAttribute('text-anchor', 'middle');
   var tspanSize = fontSize / 3;
   text.innerHTML = 0 + '<tspan font-size="' + tspanSize + '" dy="' + -tspanSize * 1.2 + '">%</tspan>';
@@ -295,7 +294,7 @@ Dial1.prototype.createArrow = function() {
   var arrowDOffset =  m * (arrowSize / 1.5);
   var arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
   arrow.setAttribute('d', 'M 0 0 ' + arrowSize + ' 0 ' + arrowSize / 2 + ' ' + arrowDOffset + ' 0 0 Z');
-  arrow.setAttribute('fill', '#97F8F0');
+  arrow.setAttribute('fill', '#FFF');
   arrow.setAttribute('opacity', '0.6');
   arrow.setAttribute('transform', 'translate(' + arrowPosX + ',' + arrowPosY + ')');
   this.svg.appendChild(arrow);
@@ -359,6 +358,8 @@ Dial1.prototype.setValue = function(value) {
 var containers = document.getElementsByClassName("donutchart1");
 var dial = new Dial1(containers[0]);
 dial.animateStart();
+
+
 
 
 // ==========
@@ -454,7 +455,7 @@ Dial2.prototype.createText = function() {
   text.setAttribute('y', (this.size / 2) + fontSize / 4);
   text.setAttribute('font-family', 'Century Gothic, Lato');
   text.setAttribute('font-size', fontSize);
-  text.setAttribute('fill', '#78F8EC');
+  text.setAttribute('fill', '#FFF');
   text.setAttribute('text-anchor', 'middle');
   var tspanSize = fontSize / 3;
   text.innerHTML = 0 + '<tspan font-size="' + tspanSize + '" dy="' + -tspanSize * 1.2 + '">%</tspan>';
@@ -478,7 +479,7 @@ Dial2.prototype.createArrow = function() {
   var arrowDOffset =  m * (arrowSize / 1.5);
   var arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
   arrow.setAttribute('d', 'M 0 0 ' + arrowSize + ' 0 ' + arrowSize / 2 + ' ' + arrowDOffset + ' 0 0 Z');
-  arrow.setAttribute('fill', '#97F8F0');
+  arrow.setAttribute('fill', '#FFF');
   arrow.setAttribute('opacity', '0.6');
   arrow.setAttribute('transform', 'translate(' + arrowPosX + ',' + arrowPosY + ')');
   this.svg.appendChild(arrow);
@@ -636,7 +637,7 @@ Dial3.prototype.createText = function() {
   text.setAttribute('y', (this.size / 2) + fontSize / 4);
   text.setAttribute('font-family', 'Century Gothic, Lato');
   text.setAttribute('font-size', fontSize);
-  text.setAttribute('fill', '#78F8EC');
+  text.setAttribute('fill', '#FFF');
   text.setAttribute('text-anchor', 'middle');
   var tspanSize = fontSize / 3;
   text.innerHTML = 0 + '<tspan font-size="' + tspanSize + '" dy="' + -tspanSize * 1.2 + '">%</tspan>';
@@ -660,7 +661,7 @@ Dial3.prototype.createArrow = function() {
   var arrowDOffset =  m * (arrowSize / 1.5);
   var arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
   arrow.setAttribute('d', 'M 0 0 ' + arrowSize + ' 0 ' + arrowSize / 2 + ' ' + arrowDOffset + ' 0 0 Z');
-  arrow.setAttribute('fill', '#97F8F0');
+  arrow.setAttribute('fill', '#FFF');
   arrow.setAttribute('opacity', '0.6');
   arrow.setAttribute('transform', 'translate(' + arrowPosX + ',' + arrowPosY + ')');
   this.svg.appendChild(arrow);
@@ -819,7 +820,7 @@ Dial4.prototype.createText = function() {
   text.setAttribute('y', (this.size / 2) + fontSize / 4);
   text.setAttribute('font-family', 'Century Gothic, Lato');
   text.setAttribute('font-size', fontSize);
-  text.setAttribute('fill', '#78F8EC');
+  text.setAttribute('fill', '#FFF');
   text.setAttribute('text-anchor', 'middle');
   var tspanSize = fontSize / 3;
   text.innerHTML = 0 + '<tspan font-size="' + tspanSize + '" dy="' + -tspanSize * 1.2 + '">%</tspan>';
@@ -843,7 +844,7 @@ Dial4.prototype.createArrow = function() {
   var arrowDOffset =  m * (arrowSize / 1.5);
   var arrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
   arrow.setAttribute('d', 'M 0 0 ' + arrowSize + ' 0 ' + arrowSize / 2 + ' ' + arrowDOffset + ' 0 0 Z');
-  arrow.setAttribute('fill', '#97F8F0');
+  arrow.setAttribute('fill', '#FFF');
   arrow.setAttribute('opacity', '0.6');
   arrow.setAttribute('transform', 'translate(' + arrowPosX + ',' + arrowPosY + ')');
   this.svg.appendChild(arrow);
