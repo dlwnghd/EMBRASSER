@@ -171,6 +171,10 @@
     padding: 0.5%;
 }
 
+.result-input:focus {
+    outline: none;
+}
+
 .msg.pass {
     color: #6263d1;
     margin: 1% 1% 2%;

@@ -181,6 +181,13 @@
     text-align: left;
 }
 
+.result-input:focus,
+.result-input.name:focus,
+.result-input.sex:focus,
+.result-input.addr:focus {
+    outline: none;
+}
+
 .msg {
     display: flex;
     align-items: center;
