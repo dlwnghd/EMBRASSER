@@ -35,7 +35,7 @@
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 .cate.all {
@@ -54,7 +54,7 @@
 .cate.sex:not(.choice),
 .cate.grade:not(.choice) {
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .contents {
