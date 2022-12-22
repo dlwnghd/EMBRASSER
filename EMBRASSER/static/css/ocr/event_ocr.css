@@ -31,12 +31,21 @@
 }
 
 .ocr_img.event {
-    height: 79vh;
+    height: 31vh;
     width: 100%;
 }
 
 .event_hidden {
     display: none;
+}
+
+.accordion-area {
+    display: flex;
+}
+
+.accordion {
+    width: 50% !important;
+    margin: 0 0 0 1%;
 }
 
 #btn-one:not(.collapsed),
@@ -77,7 +86,7 @@
 
 /* drag and drop css 내용 입니다~~~ */
 .drop-zone {
-    max-width: 50%;
+    max-width: 100%;
     height: 79vh;
     padding: 25px;
     margin: 0 auto;
@@ -92,6 +101,11 @@
     color: #cccccc;
     border: 4px dashed #A3BFFF;
     border-radius: 10px;
+}
+
+.drop-zone.event {
+    max-width: 100%;
+    height: 31vh;
 }
 
 .drop-zone--over {
@@ -125,9 +139,9 @@
     text-align: center;
 }
 
-button#read_appImg {
+#read_appImg {
     margin: 1% auto;
-    width: 50%;
+    width: 100%;
     padding: 1%;
     display: flex;
     justify-content: center;
