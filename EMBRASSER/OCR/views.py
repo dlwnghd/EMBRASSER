@@ -18,10 +18,11 @@ from ocr_module.model.intent.IntentModel import IntentModel
 from django.db.models import Q      # filter OR 사용하는 모듈
 
 
+
 # 승현, 희지 import
 from django.db.models import Count, Avg, Sum
 
-
+# 회원가입신청서 OCR
 def coocr_first (request):
     context = {}
     context['menutitle'] = '회원 등록'
@@ -130,6 +131,7 @@ def coocr_first (request):
 
     return render(request, 'member_ocr_f.html', context)
 
+# 주민등록등본 OCR
 def coocr_second (request):
     name = request.POST.get('name')
     age = request.POST.get('age')
@@ -282,6 +284,7 @@ def coocr_second (request):
     
     return render(request, 'member_ocr_s.html', context)
 
+# 가족관계증명서 OCR
 def coocr_third (request):
     name = request.POST.get('name')
     age = request.POST.get('age')
@@ -389,8 +392,10 @@ def coocr_third (request):
             partner_check = False
             for f in family_li:
                 if "배우자" in f :
-                    partner_check = True
-                    break
+                    context['msg'] = "배우자가 있습니다.<br>배우자가 있을 경우 회원 등록이 불가능합니다.<br>확인 후 문서를 처음부터 다시 등록해주세요."
+                    context['flag'] = False
+                    return render(request, 'member_ocr_fine.html', context)
+
             for f in family_li:
                 if "자녀" in f :
                     child = 1
@@ -427,6 +432,7 @@ def coocr_third (request):
     
     return render(request, 'member_ocr_t.html', context)
 
+# 회원 등록
 def join_member(request):
     context = {}
     
@@ -606,6 +612,7 @@ def join_member(request):
         print(e)
     return render(request, 'member_ocr_fine.html', context)
 
+# 이벤트 OCR1
 def event_first (request):
     context = {}
     context['menutitle'] = '이벤트 참여 등록'
@@ -695,6 +702,8 @@ def event_first (request):
             try :
                 Members.objects.get(name=marry_dict['namebone'], p_code=marry_dict['codebone'])
                 bone_check = True
+                bae_check = False
+                context['resulttext'] = marry_dict
                 Members.objects.get(name=marry_dict['namebae'], p_code=marry_dict['codebae'])
                 bae_check = True
                 context['flag'] = True
@@ -712,6 +721,7 @@ def event_first (request):
 
     return render(request, 'event_ocr_f.html', context)
 
+# 이벤트 OCR2
 def event_second (request):
     context = {}
     context['menutitle'] = '이벤트 참여 등록'
@@ -846,6 +856,7 @@ def event_second (request):
     
     return render(request, 'event_ocr_s.html', context)
 
+# 이벤트 update
 def event_update (request):
     context = {}
     
@@ -853,9 +864,6 @@ def event_update (request):
     codebone = request.POST.get('codebone')
     namebae = request.POST.get('namebae')
     codebae = request.POST.get('codebae')
-    
-    print("💖💖💖namebae:", namebae)
-    print("💖💖💖codebae:", codebae)
 
     member_bone = Members.objects.get(name=namebone, p_code=codebone)
     member_bae = Members.objects.get(name=namebae, p_code=codebae)
@@ -870,9 +878,8 @@ def event_update (request):
         bae_check = True
 
         context['flag'] = True
-        # context['namebone'] = namebone
-        # context['namebae'] = namebae
-        context['msg'] = f"{namebone}과 {namebae}님의 이벤트 참가 신청이 완료 되었습니다."
+        context['namebone'] = namebone
+        context['namebae'] = namebae
         
     except Exception as e:
         print(e)
@@ -882,6 +889,7 @@ def event_update (request):
             
     return render(request, 'event_result.html', context)
 
+# 통계
 def all_statistics(request):
 
     # 총 가입자 수 구하기
@@ -952,6 +960,7 @@ def all_statistics(request):
 
     return render(request, 'member_statistics/all_statistics.html', context)
 
+# 등급 통계
 def grade_statistics(request):
     context = {}
     
@@ -1000,13 +1009,11 @@ def grade_statistics(request):
 
             else:
                 context['F_0'] = ''
-              
 
         elif mat['grade'] == 'C':
 
             if mat['matching'] == 1:
                 context['C_1'] = mat['mat_count']
-             
 
             elif mat['matching'] == 2:
                 context['C_2'] = mat['mat_count']
@@ -1014,13 +1021,11 @@ def grade_statistics(request):
 
             else:
                 context['B_0'] = ''
-           
 
         elif mat['grade'] == 'B':
 
             if mat['matching'] == 1:
                 context['B_1'] = mat['mat_count']
-             
 
             elif mat['matching'] == 2:
                 context['B_2'] = mat['mat_count']
@@ -1055,14 +1060,6 @@ def grade_statistics(request):
 
             else:
                 context['S_0'] = ''
-               
-        
-
-
-
-
-
-
 
     # 전체 인원수
     all = Members.objects.all().values('grade').annotate(all=Count('idx'))
@@ -1122,6 +1119,7 @@ def grade_statistics(request):
 
     return render(request, 'member_statistics/grade_statistics.html', context)
 
+# 성별 통계
 def sex_statistics(request):
     # 남자 남 , 여자 여 처리
 
@@ -1196,7 +1194,7 @@ def member_list(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
     return render(request, 'member_list.html', context)
 
 # 회원 검색
@@ -1214,7 +1212,7 @@ def member_search(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
 
     return render(request, 'member_list.html', context)
 

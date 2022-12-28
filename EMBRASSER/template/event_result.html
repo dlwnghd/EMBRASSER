@@ -1,12 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이벤트 신청 결과 페이지</title>
-</head>
-<body>
-    
-</body>
-</html>
+{%extends 'layout/layout.html'%}
+{%load static%}
+
+{%block layout_title%}EVENT::결과{% endblock%}
+
+{%block layout_style%}
+    <link rel="stylesheet" href="/static/css/ocr/event_ocr_layout.css">
+{%endblock%}
+{%block layout_content%}
+
+<div class="contents">
+    {% if flag %}
+        <div class="head-title result">등록 성공</div>
+        <div class="result-msg">
+            <b>{{namebone}}</b>님과 <b>{{namebae}}</b>님의 이벤트 참가 등록이 완료 되었습니다.
+        </div>
+        <div class="buttons">
+            <div class="gofirst">
+                <a href="/ocr/coocr_first">첫단계로</a>
+            </div>
+            <div class="gomain">
+                <a href="/">HOME</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="head-title result">등록 실패</div>
+        <div class="result-msg">
+            {{msg}}
+        </div>
+        <div class="buttons">
+            <div class="gofirst">
+                <a href="/ocr/coocr_first">첫단계로</a>
+            </div>
+            <div class="gomain">
+                <a href="/">HOME</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{%endblock%}
+
+{%block layout_script%}
+    {%block script%}{%endblock%}
+{%endblock%}

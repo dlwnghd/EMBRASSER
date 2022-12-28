@@ -58,7 +58,7 @@
     transform: rotate(315deg);
 }
 
-.event_hidden {
+.member_hidden {
     display: none;
 }
 
@@ -66,6 +66,11 @@
     text-align: center;
     margin: 4% auto;
     font-size: 1.8rem;
+}
+
+.grade {
+    font-weight: 600;
+    color:#8a8bf3;
 }
 
 .buttons {

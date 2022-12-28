@@ -1,81 +1,87 @@
 {%extends 'layout/statistics_layout.html'%}
-
 {% load static %}
 
 {%block title%}등급별 회원 통계 {%endblock%}
 
-{%block style%}
-    <link rel="stylesheet" href ="{% static '/css/statistics.css' %}">
-{%endblock%}
-
-
-{%block script%}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{% static '/js/statistics.js' %}"></script>
+{%block page%}
+<div class="statistics_menu">
+    <div class="cate all">
+        <a class="menu_link" href="/ocr/all_statistics">ALL</a>
+    </div>
+    <div class="cate sex">
+        <a class="menu_link" href="/ocr/sex_statistics">GENDER</a>
+    </div>
+    <div class="cate grade choice">
+        <a class="menu_link" href="/ocr/grade_statistics">GRADE</a>
+    </div>
+</div>
 {%endblock%}
 
 {%block content%}
-<!-- <div style="background-color:lightgray;"> -->
-    <div class="donut">
-        <div class="ring donutchart" data-size="200" data-value="{{mat_suc_S}}" data-arrow="up">
+<div class="contents grade">
+    <div class="grade_graph">
+        <div class="donut matching">
+            <div class="ring donutchart" data-size="200" data-value="{{mat_suc_S}}" data-arrow="up">
+            </div>
+            <p class="donutchart_name">S 매칭 성공률</p>
         </div>
-        <p class="donutchart_name">S 매칭 성공률</p>
-    </div>
-    <div class="donut">
-        <div class="ring1 donutchart1" data-size="200" data-value="{{mat_suc_A}}" data-arrow="up">
+        <div class="donut matching">
+            <div class="ring1 donutchart1" data-size="200" data-value="{{mat_suc_A}}" data-arrow="up">
+            </div>
+            <p class="donutchart_name">A 매칭 성공률</p>
         </div>
-        <p class="donutchart_name">A 매칭 성공률</p>
-    </div>
-    <div class="donut">
-        <div class="ring2 donutchart2" data-size="200" data-value="{{mat_suc_B}}" data-arrow="up">
+        <div class="donut matching">
+            <div class="ring2 donutchart2" data-size="200" data-value="{{mat_suc_B}}" data-arrow="up">
+            </div>
+            <p class="donutchart_name">B 매칭 성공률</p>
         </div>
-        <p class="donutchart_name">B 매칭 성공률</p>
-    </div>
-    <div class="donut">
-        <div class="ring3 donutchart3" data-size="200" data-value="{{mat_suc_C}}" data-arrow="up">
+        <div class="donut matching">
+            <div class="ring3 donutchart3" data-size="200" data-value="{{mat_suc_C}}" data-arrow="up">
+            </div>
+            <p class="donutchart_name">C 매칭 성공률</p>
         </div>
-        <p class="donutchart_name">C 매칭 성공률</p>
-    </div>
-    <div class="donut">
-        <div class="ring4 donutchart4" data-size="200" data-value="{{mat_suc_F}}" data-arrow="up">
+        <div class="donut matching">
+            <div class="ring4 donutchart4" data-size="200" data-value="{{mat_suc_F}}" data-arrow="up">
+            </div>
+            <p class="donutchart_name">F 매칭 성공률</p>
         </div>
-        <p class="donutchart_name">F 매칭 성공률</p>
     </div>
-    <div style="padding-top: 10px;">
-        <table border="1px;">
-            <tr>
-                <th></th>
-                <th>S등급</th>
-                <th>A등급</th>
-                <th>B등급</th>
-                <th>C등급</th>
-                <th>F등급</th>
+    <div class="table_total">
+        <table class="grade_table">
+            <tr class="table head">
+                <th style="background-color: #bdc7ff;"></th>
+                <th class="val grade">S등급</th>
+                <th class="val grade">A등급</th>
+                <th class="val grade">B등급</th>
+                <th class="val grade">C등급</th>
+                <th class="val grade">F등급</th>
             </tr>
             <tr>
-                <th>인원수</th>
-                <td>{{a_S}}</td>
-                <td>{{a_A}}</td>
-                <td>{{a_B}}</td>
-                <td>{{a_C}}</td>
-                <td>{{a_F}}</td>
+                <th class="key grade">인원수</th>
+                <td class="val grade">{{a_S}}</td>
+                <td class="val grade">{{a_A}}</td>
+                <td class="val grade">{{a_B}}</td>
+                <td class="val grade">{{a_C}}</td>
+                <td class="val grade">{{a_F}}</td>
             </tr>
             <tr>
-                <th>평균 연봉(원)</th>
-                <td>{{s_S}}</td>
-                <td>{{s_A}}</td>
-                <td>{{s_B}}</td>
-                <td>{{s_C}}</td>
-                <td>{{s_F}}</td>
+                <th class="key grade">평균 연봉(원)</th>
+                <td class="val grade">{{s_S}}</td>
+                <td class="val grade">{{s_A}}</td>
+                <td class="val grade">{{s_B}}</td>
+                <td class="val grade">{{s_C}}</td>
+                <td class="val grade">{{s_F}}</td>
             </tr>
             <tr>
-                <th>평균나이</th>
-                <td>{{age_S}}</td>
-                <td>{{age_A}}</td>
-                <td>{{age_B}}</td>
-                <td>{{age_C}}</td>
-                <td>{{age_F}}</td>
+                <th class="key grade">평균나이</th>
+                <td class="val grade">{{age_S}}</td>
+                <td class="val grade">{{age_A}}</td>
+                <td class="val grade">{{age_B}}</td>
+                <td class="val grade">{{age_C}}</td>
+                <td class="val grade">{{age_F}}</td>
             </tr>
         </table>
     </div>
+</div>
 <!-- </div> -->
 {%endblock%}
