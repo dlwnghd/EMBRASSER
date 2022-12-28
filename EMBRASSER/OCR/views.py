@@ -18,6 +18,7 @@ from ocr_module.model.intent.IntentModel import IntentModel
 from django.db.models import Q      # filter OR 사용하는 모듈
 
 
+
 # 승현, 희지 import
 from django.db.models import Count, Avg, Sum
 
@@ -391,8 +392,10 @@ def coocr_third (request):
             partner_check = False
             for f in family_li:
                 if "배우자" in f :
-                    partner_check = True
-                    break
+                    context['msg'] = "배우자가 있습니다.<br>배우자가 있을 경우 회원 등록이 불가능합니다.<br>확인 후 문서를 처음부터 다시 등록해주세요."
+                    context['flag'] = False
+                    return render(request, 'member_ocr_fine.html', context)
+
             for f in family_li:
                 if "자녀" in f :
                     child = 1
@@ -699,6 +702,8 @@ def event_first (request):
             try :
                 Members.objects.get(name=marry_dict['namebone'], p_code=marry_dict['codebone'])
                 bone_check = True
+                bae_check = False
+                context['resulttext'] = marry_dict
                 Members.objects.get(name=marry_dict['namebae'], p_code=marry_dict['codebae'])
                 bae_check = True
                 context['flag'] = True
@@ -873,9 +878,8 @@ def event_update (request):
         bae_check = True
 
         context['flag'] = True
-        # context['namebone'] = namebone
-        # context['namebae'] = namebae
-        context['msg'] = f"{namebone}과 {namebae}님의 이벤트 참가 신청이 완료 되었습니다."
+        context['namebone'] = namebone
+        context['namebae'] = namebae
         
     except Exception as e:
         print(e)
@@ -1190,7 +1194,7 @@ def member_list(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
     return render(request, 'member_list.html', context)
 
 # 회원 검색
@@ -1208,7 +1212,7 @@ def member_search(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
 
     return render(request, 'member_list.html', context)
 
