@@ -6,8 +6,8 @@ $(document).ready(function(){
 });
 
 function sideMenu() {
-    let menu = document.querySelector(".navbar_menu");
-    let side_menu = document.querySelector(".navbar");
+    let menu = document.querySelector(".main_navbar_menu");
+    let side_menu = document.querySelector(".main_navbar");
     menu.classList.toggle("active");
     side_menu.classList.toggle("active");
 }
