@@ -25,167 +25,389 @@
 {%block content%}
 <div class="contents">
     <div class="contents-title">◆ 가족관계증명서</div>
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                {% if imgname == '' %}
-                <button id="btn-one" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                {% elif imgname != '' %}
-                <button id="btn-one" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                {% endif %}
-                    이미지 첨부
-                </button>
-            </h2>
-            {% if imgname == '' %}
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-            {% elif imgname != '' %}
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-            {% endif %}
-                <div class="accordion-body">
-                    <form
-                        action="/ocr/coocr_third"
-                        method="post"
-                        id="appform"
-                        enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input class="member_hidden" id="app-name" name="name" type="text" value="{{resulttext.name}}">
-                        <input class="member_hidden" name="age" type="text" value="{{resulttext.age}}">
-                        <input class="member_hidden" name="p_code" type="text" value="{{resulttext.p_code}}">
-                        <input class="member_hidden" name="phone" type="text" value="{{resulttext.phone}}">
-                        <input class="member_hidden" name="email" type="text" value="{{resulttext.email}}">
-                        <input class="member_hidden" name="addr" type="text" value="{{resulttext.addr}}">
-                        <input class="member_hidden" name="religion" type="text" value="{{resulttext.religion}}">
-                        <input class="member_hidden" name="scholar" type="text" value="{{resulttext.scholar}}">
-                        <input class="member_hidden" name="sex" type="text" value="{{resulttext.sex}}">
-                        <input class="member_hidden" name="job" type="text" value="{{resulttext.job}}">
-                        <input class="member_hidden" name="salary" type="text" value="{{resulttext.salary}}">
-                        <input class="member_hidden" name="property" type="text" value="{{resulttext.property}}">
-                        <input class="member_hidden" name="debt" type="text" value="{{resulttext.debt}}">
-                        <input class="member_hidden" name="re_marry" type="text" value="{{resulttext.re_marry}}">
-                        <input class="member_hidden" name="drink" type="text" value="{{resulttext.drink}}">
-                        <input class="member_hidden" name="smoke" type="text" value="{{resulttext.smoke}}">
-                        <input class="member_hidden" name="height" type="text" value="{{resulttext.height}}">
-                        <input class="member_hidden" name="weight" type="text" value="{{resulttext.weight}}">
-                        <input class="member_hidden" name="family" type="text" value="{{resulttext.family}}">
-                        <!-- <input type="file" name="uploadfile" id="uploadfile"/> -->
-                        <div class="drop-zone">
-                            <span class="drop-zone__prompt">Drop file here or click to upload</span>
-                            <input type="file" name="uploadfile" id="uploadfile" class="drop-zone__input">
-                        </div>            
-                        <button id="read_appImg" type="submit">READ</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                {% if imgname == '' %}
-                <button id="btn-two" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                {% elif imgname != '' %}
-                <button id="btn-two" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                {% endif %}
-                    원본 이미지
-                </button>
-            </h2>
-            {% if imgname == '' %}
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            {% elif imgname != '' %}
-            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            {% endif %}
-                <div class="accordion-body">
-                    <div class="ocr-imgs ori">
-                        {% if imgname == '' %}
-                            이미지를 READ해 주세요.
-                        {% else %}
-                            <img class="ocr_img" src="/static/source/{{imgname}}"/>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-                <button id="btn-three" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                전처리 이미지
-                </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <div class="ocr-imgs pre">
-                        {% if pre_img == '' %}
-                            이미지를 READ해 주세요.
-                        {% else %}
-                            <img class="ocr_img" src="/static/source/{{pre_img}}">
-                        {% endif %}
-                    </div>  
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingFour">
-                <button id="btn-fore" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                    바운딩 이미지
-                </button>
-            </h2>
-            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <div class="ocr-imgs bounding">
-                        {% if bounding_img == '' %}
-                            이미지를 READ해 주세요.
-                        {% else %}
-                            <img class="ocr_img" src="/static/source/{{bounding_img}}">
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingFive">
-                <button id="btn-five" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                    결과
-                </button>
-            </h2>
-            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <div class="results">
-                    {% if resulttext.partner_check == '' %}
-                        <div class="ocr-imgs">이미지를 READ해 주세요.</div>
-                    {% elif resulttext.partner_check == False %}
-                        <form action="/ocr/join_member" method="post">
-                            {% csrf_token %}
-                            <!--신청서에서 가져옴-->
-                            <input class="member_hidden" id="app-name" name="name" type="text" value="{{resulttext.name}}">
-                            <input class="member_hidden" name="age" type="text" value="{{resulttext.age}}">
-                            <input class="member_hidden" name="p_code" type="text" value="{{resulttext.p_code}}">
-                            <input class="member_hidden" name="phone" type="text" value="{{resulttext.phone}}">
-                            <input class="member_hidden" name="email" type="text" value="{{resulttext.email}}">
-                            <input class="member_hidden" name="addr" type="text" value="{{resulttext.addr}}">
-                            <input class="member_hidden" name="religion" type="text" value="{{resulttext.religion}}">
-                            <input class="member_hidden" name="scholar" type="text" value="{{resulttext.scholar}}">
-                            <input class="member_hidden" name="sex" type="text" value="{{resulttext.sex}}">
-                            <input class="member_hidden" name="job" type="text" value="{{resulttext.job}}">
-                            <input class="member_hidden" name="salary" type="text" value="{{resulttext.salary}}">
-                            <input class="member_hidden" name="property" type="text" value="{{resulttext.property}}">
-                            <input class="member_hidden" name="debt" type="text" value="{{resulttext.debt}}">
-                            <input class="member_hidden" name="re_marry" type="text" value="{{resulttext.re_marry}}">
-                            <input class="member_hidden" name="drink" type="text" value="{{resulttext.drink}}">
-                            <input class="member_hidden" name="smoke" type="text" value="{{resulttext.smoke}}">
-                            <input class="member_hidden" name="height" type="text" value="{{resulttext.height}}">
-                            <input class="member_hidden" name="weight" type="text" value="{{resulttext.weight}}">
-                            <input class="member_hidden" name="family" type="text" value="{{resulttext.family}}">
-                            <input class="member_hidden" name="child" type="text" value="{{resulttext.child}}">
-                            {% if resulttext.child == 0 %}
-                                <label class="msg pass">OCR 결과 자녀가 없는 것으로 확인됩니다. 맞습니까?<input class="input-check pass" type="checkbox" name="emqhs-name" required></label>
-                            {% else %}
-                                <label class="msg fail">OCR 결과 자녀가 있는 것으로 확인됩니다. 맞습니까?<input class="input-check" type="checkbox" name="emqhs-name" required></label>
+    <div class="accordion-area">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    {% if imgname == '' %}
+                        <button
+                            id="btn-one"
+                            class="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne">
+                        {% elif imgname != '' %}
+                            <button
+                                id="btn-one"
+                                class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne"
+                                aria-expanded="true"
+                                aria-controls="collapseOne">
                             {% endif %}
-                            <button id="next_button" type="submit">JOIN</button>
-                        </form>
-                    {% endif %}
+                            이미지 첨부
+                        </button>
+                    </h2>
+                    {% if imgname == '' %}
+                        <div
+                            id="collapseOne"
+                            class="accordion-collapse collapse show"
+                            aria-labelledby="headingOne"
+                            data-bs-parent="#accordionExample">
+                        {% elif imgname != '' %}
+                            <div
+                                id="collapseOne"
+                                class="accordion-collapse collapse"
+                                aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample">
+                            {% endif %}
+                            <div class="accordion-body">
+                                <form
+                                    action="/ocr/coocr_third"
+                                    method="post"
+                                    id="appform"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input
+                                        class="member_hidden"
+                                        id="app-name"
+                                        name="name"
+                                        type="text"
+                                        value="{{resulttext.name}}">
+                                    <input class="member_hidden" name="age" type="text" value="{{resulttext.age}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="p_code"
+                                        type="text"
+                                        value="{{resulttext.p_code}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="phone"
+                                        type="text"
+                                        value="{{resulttext.phone}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="email"
+                                        type="text"
+                                        value="{{resulttext.email}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="addr"
+                                        type="text"
+                                        value="{{resulttext.addr}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="religion"
+                                        type="text"
+                                        value="{{resulttext.religion}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="scholar"
+                                        type="text"
+                                        value="{{resulttext.scholar}}">
+                                    <input class="member_hidden" name="sex" type="text" value="{{resulttext.sex}}">
+                                    <input class="member_hidden" name="job" type="text" value="{{resulttext.job}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="salary"
+                                        type="text"
+                                        value="{{resulttext.salary}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="property"
+                                        type="text"
+                                        value="{{resulttext.property}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="debt"
+                                        type="text"
+                                        value="{{resulttext.debt}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="re_marry"
+                                        type="text"
+                                        value="{{resulttext.re_marry}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="drink"
+                                        type="text"
+                                        value="{{resulttext.drink}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="smoke"
+                                        type="text"
+                                        value="{{resulttext.smoke}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="height"
+                                        type="text"
+                                        value="{{resulttext.height}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="weight"
+                                        type="text"
+                                        value="{{resulttext.weight}}">
+                                    <input
+                                        class="member_hidden"
+                                        name="family"
+                                        type="text"
+                                        value="{{resulttext.family}}">
+                                    <!-- <input type="file" name="uploadfile" id="uploadfile"/> -->
+                                    <div class="drop-zone">
+                                        <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                                        <input type="file" name="uploadfile" id="uploadfile" class="drop-zone__input">
+                                    </div>
+                                    <button id="read_appImg" type="submit">READ</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            {% if imgname == '' %}
+                                <button
+                                    id="btn-two"
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo"
+                                    aria-expanded="false"
+                                    aria-controls="collapseTwo">
+                                {% elif imgname != '' %}
+                                    <button
+                                        id="btn-two"
+                                        class="accordion-button"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTwo"
+                                        aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                    {% endif %}
+                                    원본 이미지
+                                </button>
+                            </h2>
+                            {% if imgname == '' %}
+                                <div
+                                    id="collapseTwo"
+                                    class="accordion-collapse collapse"
+                                    aria-labelledby="headingTwo"
+                                    data-bs-parent="#accordionExample">
+                                {% elif imgname != '' %}
+                                    <div
+                                        id="collapseTwo"
+                                        class="accordion-collapse collapse show"
+                                        aria-labelledby="headingTwo"
+                                        data-bs-parent="#accordionExample">
+                                    {% endif %}
+                                    <div class="accordion-body">
+                                        <div class="ocr-imgs ori">
+                                            {% if imgname == '' %}
+                                                이미지를 READ해 주세요.
+                                            {% else %}
+                                                <img class="ocr_img" src="/static/source/{{imgname}}"/>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button
+                                        id="btn-three"
+                                        class="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseThree"
+                                        aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                        전처리 이미지
+                                    </button>
+                                </h2>
+                                <div
+                                    id="collapseThree"
+                                    class="accordion-collapse collapse"
+                                    aria-labelledby="headingThree"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="ocr-imgs pre">
+                                            {% if pre_img == '' %}
+                                                이미지를 READ해 주세요.
+                                            {% else %}
+                                                <img class="ocr_img" src="/static/source/{{pre_img}}">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingFour">
+                                    <button
+                                        id="btn-fore"
+                                        class="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseFour"
+                                        aria-expanded="false"
+                                        aria-controls="collapseFour">
+                                        바운딩 이미지
+                                    </button>
+                                </h2>
+                                <div
+                                    id="collapseFour"
+                                    class="accordion-collapse collapse"
+                                    aria-labelledby="headingFour"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="ocr-imgs bounding">
+                                            {% if bounding_img == '' %}
+                                                이미지를 READ해 주세요.
+                                            {% else %}
+                                                <img class="ocr_img" src="/static/source/{{bounding_img}}">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingFive">
+                                    <button
+                                        id="btn-five"
+                                        class="accordion-button"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseFive"
+                                        aria-expanded="false"
+                                        aria-controls="collapseFive">
+                                        결과
+                                    </button>
+                                </h2>
+                                <div
+                                    id="collapseFive"
+                                    class="accordion-collapse collapse show"
+                                    aria-labelledby="headingFive">
+                                    <div class="accordion-body">
+                                        <div class="results">
+                                            {% if resulttext.partner_check == '' %}
+                                                <div class="ocr-imgs">이미지를 READ해 주세요.</div>
+                                            {% elif resulttext.partner_check == False %}
+                                                <form action="/ocr/join_member" method="post">
+                                                    {% csrf_token %}
+                                                    <!--신청서에서 가져옴-->
+                                                    <input
+                                                        class="member_hidden"
+                                                        id="app-name"
+                                                        name="name"
+                                                        type="text"
+                                                        value="{{resulttext.name}}">
+                                                    <input class="member_hidden" name="age" type="text" value="{{resulttext.age}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="p_code"
+                                                        type="text"
+                                                        value="{{resulttext.p_code}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="phone"
+                                                        type="text"
+                                                        value="{{resulttext.phone}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="email"
+                                                        type="text"
+                                                        value="{{resulttext.email}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="addr"
+                                                        type="text"
+                                                        value="{{resulttext.addr}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="religion"
+                                                        type="text"
+                                                        value="{{resulttext.religion}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="scholar"
+                                                        type="text"
+                                                        value="{{resulttext.scholar}}">
+                                                    <input class="member_hidden" name="sex" type="text" value="{{resulttext.sex}}">
+                                                    <input class="member_hidden" name="job" type="text" value="{{resulttext.job}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="salary"
+                                                        type="text"
+                                                        value="{{resulttext.salary}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="property"
+                                                        type="text"
+                                                        value="{{resulttext.property}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="debt"
+                                                        type="text"
+                                                        value="{{resulttext.debt}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="re_marry"
+                                                        type="text"
+                                                        value="{{resulttext.re_marry}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="drink"
+                                                        type="text"
+                                                        value="{{resulttext.drink}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="smoke"
+                                                        type="text"
+                                                        value="{{resulttext.smoke}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="height"
+                                                        type="text"
+                                                        value="{{resulttext.height}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="weight"
+                                                        type="text"
+                                                        value="{{resulttext.weight}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="family"
+                                                        type="text"
+                                                        value="{{resulttext.family}}">
+                                                    <input
+                                                        class="member_hidden"
+                                                        name="child"
+                                                        type="text"
+                                                        value="{{resulttext.child}}">
+                                                    {% if resulttext.child == 0 %}
+                                                        <label class="msg pass">OCR 결과 자녀가 없는 것으로 확인됩니다. 맞습니까?<input
+                                                            class="input-check pass"
+                                                            type="checkbox"
+                                                            name="emqhs-name"
+                                                            required="required"></label>
+                                                    {% else %}
+                                                        <label class="msg fail">OCR 결과 자녀가 있는 것으로 확인됩니다. 맞습니까?<input
+                                                            class="input-check"
+                                                            type="checkbox"
+                                                            name="emqhs-name"
+                                                            required="required"></label>
+                                                    {% endif %}
+                                                    <button id="next_button" type="submit">JOIN</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-{%endblock%}
+    {%endblock%}

@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Gowun+Dodum&family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="icon" href="/static/image/favicon.png">
     {%block layout_style%}{%endblock%}
     <title>{%block layout_title%}{%endblock%}</title>
 </head>
 <body>
     <div class="main_navbar_menu"></div>
     <nav class="main_navbar">
-        <div class="main_navbar_title">EMBRASSER</div>
+        <div class="main_navbar_title"><a class="main_link" href="/">EMBRASSER</a></div>
         <ul class="main_navbar_ul">
             <li class="customer_menu"><a class="menu_link" href="/ocr/coocr_first">회원등록</a></li>
             <li class="customer_menu"><a class="menu_link" href="/ocr/list">회원목록</a></li>

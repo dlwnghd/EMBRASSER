@@ -1,36 +1,213 @@
 
 thead {
-    background-color:#cecece;
+    background-color:#8a8bf3;
+    color: #FFF;
 }
-.content {
-    max-width:70%;
-    margin: auto;
-    padding:10px;
+.contents {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.head-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 2% 0 3% 0;
+}
+
+.contents-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 4% 0;
+    text-align: center;
 }
 .header {
     text-align: center;
 }
+
+.list-num{
+    width:05%;
+    padding: 0.5% 0;
+}
+.list-name{
+    width:12%;
+}
+.list-sex{
+    width:07%;
+}
+.list-religion{
+    width:12%;
+}
+.list-job{
+    width:13%;
+}
+.list-property{
+    width:13%;
+}
+.list-height{
+    width:08%;
+}
+.list-weight{
+    width:08%;
+}
+.list-grade{
+    width:05%;
+}
+.list-matching{
+    width:6%;
+}
+.list-option{
+    width:9%;
+}
+
 td{
     text-align: center;
+    padding: 0.5% 0;
 }
+
+.matching-option,
+.matching-option:focus {
+    border: 0px;
+    background-color: #EEF1FF;
+    padding: 0 5% 0 0;
+    outline: none;
+    font-size: 1.2rem;
+    font-family: 'IBM Plex Sans KR', sans-serif !important;
+    text-align: center;
+}
+
+.matching-option:not(.even),
+.matching-option:not(.even):focus{
+    border: 0px;
+    background-color:#FFF;
+    padding: 0 5% 0 0;
+    outline: none;
+    font-size: 1.2rem;
+    font-family: 'IBM Plex Sans KR', sans-serif !important;
+    text-align: center;
+}
+
+.list-option-detail {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 5% 0;
+}
+
+.del-bnt {
+    padding: 3.25%;
+    border: 0px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1rem;
+    background: #8a8bf3;
+    display: inline-block;
+    text-align: center;
+}
+
+.modi-bnt {
+    padding: 3.25%;
+    border: 2px solid #8a8bf3;
+    border-radius: 10px;
+    color: #202020;
+    font-size: 1rem;
+    background: #FFF;
+    display: inline-block;
+    text-align: center;
+}
+
+/* .modi-bnt:not(.even) {
+    padding: 3.25%;
+    border: 2px solid #8a8bf3;
+    border-radius: 10px;
+    color: #202020;
+    font-size: 1rem;
+    background: #ffffff;
+    display: inline-block;
+    text-align: center;
+} */
+
 .board {
     width: 100%
 }
 .even_bgcolor {
-    background-color:#e8efff;
+    background-color:#EEF1FF;
 }
 .pagination {
-    display: flex;           
+    display: flex;
+    justify-content: center;
+    margin: 2% 0;        
 }
-.current {
+
+.pre {
+    width: 5%;
+}
+.paging {
+    width: 15%
+}
+.next {
+    width: 5%;
+}
+/* .current {
+} */
+
+.page_num {
+    margin: 0 3%;
+}
+
+.current a {
+    color: #8a8bf3 !important;
     font-weight: bold;
 }
-a {
+
+a,
+a:link,
+a:visited {
+    font-size: 1.25rem;
+    color: #202020;
     text-decoration: none;
     text-align: center;
 }
 .abutton {
-    background-color: #e6e6ff;
-    color: #7b7b7b;
+    color: #202020;
     font-size: small;
+    font-weight: 600;
+    margin: 0 8%;
+}
+
+.search-area {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.search-input,
+.search-input:focus {
+    width: 24%;
+    margin: 0 0 1% 0;
+    border: 0px;
+    padding: 0.5% 0 0.5% 1%;
+    outline: none;
+    font-size: 1.2rem;
+    background-color: #eeeeee;
+    border-radius: 6px 0 0 6px;
+}
+
+.search-input::placeholder {
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.search-bnt {
+    padding: 0.38% 1%;
+    border: 0px;
+    border-radius: 0 6px 6px 0;
+    color: #202020;
+    font-size: 1.2rem;
+    background: #eeeeee;
+    display: inline-block;
+    text-align: center;
 }

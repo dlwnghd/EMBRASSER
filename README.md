@@ -96,7 +96,7 @@
 
 🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫
 
-11. 🚫 Create Pull Request  🚫이 버튼 누르지 말기
+🚫🚫11. Create Pull Request 🚫이 버튼 누르지 말기🚫🚫
 
 🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫
 
@@ -167,12 +167,6 @@
     </td>
     <td align="center" width="96">
       <a href="#macropower-tech">
-        <img src=".\READEME\image\flask.svg" width="48" height="48" alt="Flask" style="background-color:white;"/>
-      </a>
-      <br>Flask
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech">
         <img src=".\READEME\image\tensorflow.svg" width="48" height="48" alt="TensorFlow" />
       </a>
       <br>TensorFlow
@@ -231,9 +225,9 @@
   <tr>
     <td align="center" width="96">
       <a href="#macropower-tech">
-        <img src=".\READEME\image\naver.svg" width="48" height="48" alt="Naver"/>
+        <img src=".\READEME\image\네이버_블로그.png" width="48" height="48" alt="naver_blog"/>
       </a>
-      <br>Naver
+      <br>naver_blog
     </td>
     <td align="center" width="96">
       <a href="#macropower-tech">
@@ -241,11 +235,17 @@
       </a>
       <br>naver_cafe
     </td>
-    <td align="center" width="96">
+    <td align="center" width="">
       <a href="#macropower-tech">
-        <img src="https://ssl.pstatic.net/static/weather/web_icon/web_iOS_iPhone_3x_180X180.png" width="48" height="48" alt="naver_weather" />
+        <img src=".\READEME\image\ai허브.png" width="100%" height="48" alt="AIHub"/>
       </a>
-      <br>naver_weather
+      <br>AI_Hub
+    </td>
+    <td align="center" width="">
+      <a href="#macropower-tech">
+        <img src=".\READEME\image\바른손.svg" width="100%" height="48" alt="바른손카드"/>
+      </a>
+      <br>바른손카드
     </td>
   </tr>
 </table>

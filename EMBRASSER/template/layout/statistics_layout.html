@@ -1,39 +1,28 @@
+{%extends 'layout/layout.html'%}
 {%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{%block title%}{% endblock%}</title>
+
+{%block layout_title%}회원통계{% endblock%}
+
+{%block layout_style%}
+    <link rel="stylesheet" href="/static/css/statistics.css">
     {%block style%}{%endblock%}
-</head>
-<body>
-    <div class="navbar_menu"></div>
-    <nav class="navbar">
-        <div class="navbar_title">EMBRASSER</div>
-        <ul class="navbar_ul">
-            <li class="customer_menu"><a class="menu_link" href="/ocr/coocr_first">회원등록</a></li>
-            <li class="customer_menu"><a class="menu_link" href="/ocr/list">회원목록</a></li>
-            <li class="customer_menu"><a class="menu_link" href="/ocr/all_statistics">회원통계</a></li>
-            <li class="customer_menu"><a class="menu_link" href="/ocr/event_first">EVENT</a></li>
-            <li class="member_menu"><img class="login-icon" src="/static/image/login.png"><a class="menu_link" href="/member/login">로그인</a></li>
-        </ul>
-    </nav>
-    <div style="height: 200px; text-align: center; font-size: 3.5em; background-color: antiquewhite;"> 통계 </div>
-    <div style="width: 15%; height: 600px; float: left; font-size: 1.5em; background-color: aqua;">
-        <a href="/ocr/all_statistics">all</a><br>
-        <a href="/ocr/sex_statistics">sex</a><br>
-        <a href="/ocr/grade_statistics">grade</a>
-    </div>
-    <!-- <div class="wrapper">
-        <div class="container chart" data-size="400" data-value="30" data-arrow="up">
+{%endblock%}
+
+{%block layout_content%}
+    <div class="event_hidden" id="warning">{{alrt}}</div>
+    <div class="header">
+        <div class="head-title">
+            통계
         </div>
-    </div> -->
-    <div style="width: 85%; height: 100%; float: right; font-size: 1.5em; background-color: palegoldenrod;">
+    </div>
+    <div class="contents-frame">
+        {%block page%}{%endblock%}
         {%block content%}{%endblock%}
     </div>
-    
-</body>
+{%endblock%}
+
+{%block layout_script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static '/js/statistics.js' %}"></script>
 {%block script%}{%endblock%}
-</html>
+{%endblock%}

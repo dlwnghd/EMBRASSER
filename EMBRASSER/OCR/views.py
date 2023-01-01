@@ -878,9 +878,8 @@ def event_update (request):
         bae_check = True
 
         context['flag'] = True
-        # context['namebone'] = namebone
-        # context['namebae'] = namebae
-        context['msg'] = f"{namebone}과 {namebae}님의 이벤트 참가 신청이 완료 되었습니다."
+        context['namebone'] = namebone
+        context['namebae'] = namebae
         
     except Exception as e:
         print(e)
@@ -1195,7 +1194,7 @@ def member_list(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
     return render(request, 'member_list.html', context)
 
 # 회원 검색
@@ -1213,7 +1212,7 @@ def member_search(request):
     paginator = Paginator(member, 10)                   # 페이지에 표시할 갯수
     page = int(request.GET.get('page', 1))              # 처음에 보여줄 페이지 설정
     member_list = paginator.get_page(page)
-    context = {'title' : 'Member List', 'board_list' : member_list}
+    context = {'title' : '회원 목록', 'board_list' : member_list}
 
     return render(request, 'member_list.html', context)
 
